@@ -1,0 +1,57 @@
+.theme-accordion-s1 {
+	margin-bottom: 0;
+
+	.MuiPaper-root {
+		margin-bottom: 20px;
+		position: relative;
+		border: 1px solid #e6e5e5;
+		padding: 25px;
+		box-shadow: none;
+
+
+		.MuiButtonBase-root {
+			position: relative;
+
+			.MuiTypography-root {
+				margin-bottom: 0;
+				font-size: 20px;
+				font-size: 1.25rem;
+				color: #2b2e3a;
+				display: block;
+				padding: 0 0 0 45px;
+				position: relative;
+			}
+
+			&:after {
+				font-family: "themify";
+				content: "\e61a";
+				width: 35px;
+				height: 35px;
+				line-height: 35px;
+				text-align: center;
+				color: $theme-primary-color;
+				font-size: 15px;
+				font-size: calc-rem-value(15);
+				border: 1px solid $theme-primary-color;
+				border-radius: 50%;
+				position: absolute;
+				left: 0px;
+				top: 50%;
+				transform: translateY(-50%);
+
+				@include media-query(991px) {
+					font-size: 18px;
+					font-size: calc-rem-value(18);
+					left: 0;
+				}
+			}
+
+			&.Mui-expanded {
+				&:after { 
+					content: "\e622";
+				}
+			}
+
+		}
+	}
+}
