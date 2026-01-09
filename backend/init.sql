@@ -22,14 +22,32 @@ CREATE TABLE home_page (
     hero_button_nl VARCHAR(100),
     hero_image VARCHAR(500),
 
+    -- Features Section (3 items)
+    feature1_icon VARCHAR(100),
+    feature1_title_en VARCHAR(255),
+    feature1_title_es VARCHAR(255),
+    feature1_title_nl VARCHAR(255),
+    feature1_description_en TEXT,
+    feature1_description_es TEXT,
+    feature1_description_nl TEXT,
+
+    feature2_icon VARCHAR(100),
+    feature2_title_en VARCHAR(255),
+    feature2_title_es VARCHAR(255),
+    feature2_title_nl VARCHAR(255),
+    feature2_description_en TEXT,
+    feature2_description_es TEXT,
+    feature2_description_nl TEXT,
+
+    feature3_icon VARCHAR(100),
+    feature3_title_en VARCHAR(255),
+    feature3_title_es VARCHAR(255),
+    feature3_title_nl VARCHAR(255),
+    feature3_description_en TEXT,
+    feature3_description_es TEXT,
+    feature3_description_nl TEXT,
+
     -- About Section
-    about_experience_years VARCHAR(10),
-    about_experience_text_en VARCHAR(100),
-    about_experience_text_es VARCHAR(100),
-    about_experience_text_nl VARCHAR(100),
-    about_experience_highlight_en VARCHAR(100),
-    about_experience_highlight_es VARCHAR(100),
-    about_experience_highlight_nl VARCHAR(100),
     about_tag_en VARCHAR(255),
     about_tag_es VARCHAR(255),
     about_tag_nl VARCHAR(255),
@@ -45,12 +63,23 @@ CREATE TABLE home_page (
     about_phone VARCHAR(100),
     about_image VARCHAR(500),
 
+    -- Services Section Header (for home page)
+    services_tag_en VARCHAR(100),
+    services_tag_es VARCHAR(100),
+    services_tag_nl VARCHAR(100),
+    services_title_en TEXT,
+    services_title_es TEXT,
+    services_title_nl TEXT,
+    services_description_en TEXT,
+    services_description_es TEXT,
+    services_description_nl TEXT,
+
     -- Testimonial Section
     testimonial_quote_en TEXT,
     testimonial_quote_es TEXT,
     testimonial_quote_nl TEXT,
     testimonial_author VARCHAR(100),
-    testimonial_author_image VARCHAR(500),
+    testimonial_quote_icon VARCHAR(500),
 
     -- FunFact Section (4 items)
     funfact_1_number VARCHAR(20),
@@ -239,7 +268,6 @@ CREATE TABLE services (
     description_es TEXT,
     description_nl TEXT,
     icon VARCHAR(100),
-    image_url VARCHAR(500),
 
     -- Section 1 (title + rich text content)
     section_1_title_en VARCHAR(255),
@@ -268,6 +296,80 @@ CREATE TABLE services (
     -- Meta
     is_published BOOLEAN DEFAULT TRUE,
     sort_order INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- =============================================
+-- ABOUT PAGE (Quienes Somos)
+-- /about
+-- =============================================
+
+CREATE TABLE about_page (
+    id SERIAL PRIMARY KEY,
+
+    -- Page header
+    page_title_en VARCHAR(255),
+    page_title_es VARCHAR(255),
+    page_title_nl VARCHAR(255),
+    page_breadcrumb_en VARCHAR(100),
+    page_breadcrumb_es VARCHAR(100),
+    page_breadcrumb_nl VARCHAR(100),
+    background_image VARCHAR(500),
+
+    -- Profile info
+    profile_image VARCHAR(500),
+    name VARCHAR(255),
+    title_en VARCHAR(255),
+    title_es VARCHAR(255),
+    title_nl VARCHAR(255),
+
+    -- Contact info
+    phone VARCHAR(100),
+    email VARCHAR(255),
+    experience_en VARCHAR(100),
+    experience_es VARCHAR(100),
+    experience_nl VARCHAR(100),
+    address_en TEXT,
+    address_es TEXT,
+    address_nl TEXT,
+
+    -- Social links
+    social_facebook VARCHAR(500),
+    social_twitter VARCHAR(500),
+    social_linkedin VARCHAR(500),
+    social_pinterest VARCHAR(500),
+    social_instagram VARCHAR(500),
+
+    -- Content sections
+    about_title_en VARCHAR(255),
+    about_title_es VARCHAR(255),
+    about_title_nl VARCHAR(255),
+    about_content_en TEXT,
+    about_content_es TEXT,
+    about_content_nl TEXT,
+
+    experience_title_en VARCHAR(255),
+    experience_title_es VARCHAR(255),
+    experience_title_nl VARCHAR(255),
+    experience_content_en TEXT,
+    experience_content_es TEXT,
+    experience_content_nl TEXT,
+
+    education_title_en VARCHAR(255),
+    education_title_es VARCHAR(255),
+    education_title_nl VARCHAR(255),
+    education_content_en TEXT,
+    education_content_es TEXT,
+    education_content_nl TEXT,
+
+    achievements_title_en VARCHAR(255),
+    achievements_title_es VARCHAR(255),
+    achievements_title_nl VARCHAR(255),
+    achievements_content_en TEXT,
+    achievements_content_es TEXT,
+    achievements_content_nl TEXT,
+
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -319,6 +421,9 @@ CREATE TABLE blog_page (
     sidebar_tags_title_en VARCHAR(100),
     sidebar_tags_title_es VARCHAR(100),
     sidebar_tags_title_nl VARCHAR(100),
+
+    -- Background image
+    background_image VARCHAR(500),
 
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -407,15 +512,6 @@ CREATE TABLE blogs (
     quote_text_nl TEXT,
     quote_author VARCHAR(100),
 
-    author_name VARCHAR(100),
-    author_title_en VARCHAR(100),
-    author_title_es VARCHAR(100),
-    author_title_nl VARCHAR(100),
-    author_bio_en TEXT,
-    author_bio_es TEXT,
-    author_bio_nl TEXT,
-    author_image VARCHAR(500),
-
     image_url VARCHAR(500),
     thumbnail_url VARCHAR(500),
 
@@ -467,6 +563,9 @@ CREATE TABLE global_content (
     nav_contact_en VARCHAR(50),
     nav_contact_es VARCHAR(50),
     nav_contact_nl VARCHAR(50),
+    nav_about_en VARCHAR(50),
+    nav_about_es VARCHAR(50),
+    nav_about_nl VARCHAR(50),
 
     -- Footer
     footer_about_text_en TEXT,
@@ -655,17 +754,17 @@ INSERT INTO services (slug, title_en, title_es, title_nl, description_en, descri
      'flaticon-stats', 3);
 
 -- Sample blogs
-INSERT INTO blogs (slug, title_en, title_es, title_nl, description_en, description_es, description_nl, author_name, published_at) VALUES
+INSERT INTO blogs (slug, title_en, title_es, title_nl, description_en, description_es, description_nl, published_at, image_url, thumbnail_url) VALUES
     ('consulting-success', 'Consulting Success Guide', 'Guía de Éxito en Consultoría', 'Consultancy Succesgids',
      'Learn the secrets of successful consulting',
      'Aprende los secretos de la consultoría exitosa',
      'Leer de geheimen van succesvolle consultancy',
-     'John Doe', '2024-02-16'),
+     '2024-02-16', '/images/blog/img-1.jpg', '/images/blog/img-1.jpg'),
     ('grow-your-practice', 'Grow Your Practice', 'Haz Crecer tu Práctica', 'Laat je Praktijk Groeien',
      'Tips and strategies for business growth',
      'Consejos y estrategias para el crecimiento empresarial',
      'Tips en strategieën voor bedrijfsgroei',
-     'Jane Smith', '2024-03-17');
+     '2024-03-17', '/images/blog/img-2.jpg', '/images/blog/img-2.jpg');
 
 -- Sample tags
 INSERT INTO tags (slug, name_en, name_es, name_nl) VALUES

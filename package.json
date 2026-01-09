@@ -26,6 +26,7 @@
     "react-modal-video": "^2.0.1",
     "react-owl-carousel": "^2.3.1",
     "react-photoswipe-gallery": "^2.2.2",
+    "react-quill": "^2.0.0",
     "react-redux": "^7.2.4",
     "react-responsive-masonry": "^2.1.5",
     "react-router-dom": "^5.1.2",

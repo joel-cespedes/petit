@@ -479,7 +479,7 @@
 		}
 
 		#navbar {
-			justify-content: center;
+			justify-content: flex-end;
 
 			> ul > li a {
 				color: $white;
@@ -990,6 +990,18 @@
     left: 0;
 }
 
+.menu-language{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	select {
+		border: none;
+		background: transparent;
+		color: white;
+		font-size: 12px;
+	
+	}
+}
 .responsivemenu {
     list-style: none;
     padding-left: 0;

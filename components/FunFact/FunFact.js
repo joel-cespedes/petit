@@ -1,50 +1,47 @@
 import React from 'react'
 import CountUp from 'react-countup';
 
-const funFact = [
-    {
-        title: '25',
-        subTitle: 'Years of experience',
-        Symbol: '+',
-        icon: 'fi flaticon-diamond',
-    },
-    {
-        title: '250',
-        subTitle: 'Happy clients',
-        Symbol: '+',
-        icon: 'fi flaticon-happy',
-    },
-    {
-        title: '137',
-        subTitle: 'Projects done',
-        Symbol: '+',
-        icon: 'fi flaticon-projector',
-    },
-    {
-        title: '13',
-        subTitle: 'Awards won',
-        Symbol: '+',
-        icon: 'fi flaticon-medal',
-    },
+const FunFact = ({ data }) => {
+    const funFactItems = [
+        {
+            title: data?.funfact_1_number || '0',
+            subTitle: data?.funfact_1_label || '',
+            Symbol: data?.funfact_1_symbol || '',
+            icon: `fi ${data?.funfact_1_icon || 'flaticon-diamond'}`,
+        },
+        {
+            title: data?.funfact_2_number || '0',
+            subTitle: data?.funfact_2_label || '',
+            Symbol: data?.funfact_2_symbol || '',
+            icon: `fi ${data?.funfact_2_icon || 'flaticon-happy'}`,
+        },
+        {
+            title: data?.funfact_3_number || '0',
+            subTitle: data?.funfact_3_label || '',
+            Symbol: data?.funfact_3_symbol || '',
+            icon: `fi ${data?.funfact_3_icon || 'flaticon-projector'}`,
+        },
+        {
+            title: data?.funfact_4_number || '0',
+            subTitle: data?.funfact_4_label || '',
+            Symbol: data?.funfact_4_symbol || '',
+            icon: `fi ${data?.funfact_4_icon || 'flaticon-medal'}`,
+        },
+    ];
 
-
-]
-
-
-const FunFact = (props) => {
     return (
         <section className="fun-fact-section">
             <div className="container">
                 <div className="row">
                     <div className="col col-xs-12">
                         <div className="fun-fact-grids clearfix">
-                            {funFact.map((funfact, fitem) => (
+                            {funFactItems.map((funfact, fitem) => (
                                 <div className="grid" key={fitem}>
                                     <div className="icon">
                                         <div className={funfact.icon}></div>
                                     </div>
                                     <div className="info">
-                                        <h3><span><CountUp end={funfact.title} enableScrollSpy /></span>{funfact.Symbol}</h3>
+                                        <h3><span><CountUp end={parseInt(funfact.title)} enableScrollSpy /></span>{funfact.Symbol}</h3>
                                         <p>{funfact.subTitle}</p>
                                     </div>
                                 </div>

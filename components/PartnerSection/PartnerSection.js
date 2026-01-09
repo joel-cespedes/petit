@@ -1,51 +1,46 @@
 import React from "react";
 import Link from "next/link";
-import pimg1 from '/public/images/partners/img-1.png'
-import pimg2 from '/public/images/partners/img-2.png'
-import pimg3 from '/public/images/partners/img-3.png'
-import pimg4 from '/public/images/partners/img-4.png'
-import Image from "next/image";
 
-
-const PartnerSection = (props) => {
+const PartnerSection = ({ data }) => {
 
     const ClickHandler = () => {
         window.scrollTo(10, 0);
     }
+
     return (
         <section className="cta-with-partners">
             <div className="container">
                 <div className="row">
                     <div className="col col-lg-6 col-12">
                         <div className="section-title-s2">
-                            <span>Meet up</span>
-                            <h2>Need help with a <br/>Project?</h2>
+                            <span>{data?.partner_tag || ''}</span>
+                            <h2>{data?.partner_title || ''}</h2>
                         </div>
                         <div className="cta-text">
-                            <p>Showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer gregor then turned to look arround the world </p>
-                            <Link onClick={ClickHandler} href="/contact" className="theme-btn-s2">Get In Touch</Link>
+                            <p>{data?.partner_description || ''}</p>
+                            <Link onClick={ClickHandler} href="/contact" className="theme-btn-s2">{data?.partner_button || ''}</Link>
                         </div>
                     </div>
                     <div className="col col-lg-6 col-12">
                         <div className="partner-grids clearfix">
                             <div className="grid">
                                 <div className="img-holder">
-                                    <Image src={pimg1} alt=""/>
+                                    <img src={data?.partner1_image || '/images/partners/img-1.png'} alt={data?.partner1_image_alt || ''} />
                                 </div>
                             </div>
                             <div className="grid">
                                 <div className="img-holder">
-                                    <Image src={pimg2} alt=""/>
+                                    <img src={data?.partner2_image || '/images/partners/img-2.png'} alt={data?.partner2_image_alt || ''} />
                                 </div>
                             </div>
                             <div className="grid">
                                 <div className="img-holder">
-                                    <Image src={pimg3} alt=""/>
+                                    <img src={data?.partner3_image || '/images/partners/img-3.png'} alt={data?.partner3_image_alt || ''} />
                                 </div>
                             </div>
                             <div className="grid">
                                 <div className="img-holder">
-                                    <Image src={pimg4} alt=""/>
+                                    <img src={data?.partner4_image || '/images/partners/img-4.png'} alt={data?.partner4_image_alt || ''} />
                                 </div>
                             </div>
                         </div>

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Features = (props) => {
+const Features = ({ data }) => {
     return (
         <section className="features-section">
             <div className="container">
@@ -9,24 +9,24 @@ const Features = (props) => {
                         <div className="feature-grids clearfix">
                             <div className="grid">
                                 <div className="icon">
-                                    <i className="fi flaticon-sheriff"></i>
+                                    <i className={`fi ${data?.feature1_icon || 'flaticon-sheriff'}`}></i>
                                 </div>
-                                <h3>Business Consulting</h3>
-                                <p>Peacefully between its four familiar walls. A collection of textile samples lay spread out on the table</p>
+                                <h3>{data?.feature1_title || ''}</h3>
+                                <p>{data?.feature1_description || ''}</p>
                             </div>
                             <div className="grid">
                                 <div className="icon">
-                                    <i className="fi flaticon-diamond"></i>
+                                    <i className={`fi ${data?.feature2_icon || 'flaticon-diamond'}`}></i>
                                 </div>
-                                <h3>Market Research</h3>
-                                <p>Peacefully between its four familiar walls. A collection of textile samples lay spread out on the table</p>
+                                <h3>{data?.feature2_title || ''}</h3>
+                                <p>{data?.feature2_description || ''}</p>
                             </div>
                             <div className="grid">
                                 <div className="icon">
-                                    <i className="fi flaticon-idea"></i>
+                                    <i className={`fi ${data?.feature3_icon || 'flaticon-idea'}`}></i>
                                 </div>
-                                <h3>Thaught Leadership</h3>
-                                <p>Peacefully between its four familiar walls. A collection of textile samples lay spread out on the table</p>
+                                <h3>{data?.feature3_title || ''}</h3>
+                                <p>{data?.feature3_description || ''}</p>
                             </div>
                         </div>
                     </div>

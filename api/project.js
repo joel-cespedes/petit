@@ -27,27 +27,7 @@ const Projects = [
       slug:'Business-Analysis',  
       subTitle:'Business',   
    },
-    {
-       Id:'4',
-       pImg:pimg4,
-       title:'Financial Advices',  
-       slug:'Financial-Advices',  
-       subTitle:'Consulting', 
-    }, 
-    {
-       Id:'5',
-       pImg:pimg5,
-       title:'Business Analysis',  
-      slug:'Business-Analysiss',   
-       subTitle:'Consulting', 
-    }, 
-    {
-      Id:'6',
-      pImg:pimg6,
-      title:'Investment planning', 
-      slug:'Investment-plannings', 
-      subTitle:'Maketing',    
-   },
+
 ]
 
 export default Projects;

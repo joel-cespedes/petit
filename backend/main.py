@@ -11,8 +11,8 @@ import shutil
 from database import get_db, get_page_content, get_dynamic_content, get_single_item
 from auth import verify_password, create_token, verify_token
 
-# Create uploads directory
-UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
+# Create uploads directory in frontend's public folder
+UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "..", "public", "uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 app = FastAPI(title="Jhair API", version="1.0.0")
@@ -26,9 +26,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Serve uploaded files
-app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
-
 VALID_LANGUAGES = ["en", "es", "nl"]
 
 
@@ -36,6 +33,14 @@ def validate_lang(lang: str):
     if lang not in VALID_LANGUAGES:
         raise HTTPException(status_code=400, detail=f"Invalid language. Use: {VALID_LANGUAGES}")
     return lang
+
+
+def clean_update_data(data: dict) -> dict:
+    """Remove auto-managed fields from update data to prevent duplicate assignments"""
+    data.pop("id", None)
+    data.pop("created_at", None)
+    data.pop("updated_at", None)
+    return data
 
 
 # =============================================
@@ -48,15 +53,15 @@ class LoginRequest(BaseModel):
 
 
 @app.post("/api/auth/login")
-def login(data: LoginRequest, db: Session = Depends(get_db)):
+def login(data: LoginRequest):
     """Login and get JWT token"""
-    query = text("SELECT username, password_hash FROM admin_users WHERE username = :username")
-    result = db.execute(query, {"username": data.username}).fetchone()
+    admin_user = os.getenv("ADMIN_USER")
+    admin_hash = os.getenv("ADMIN_PASSWORD_HASH")
 
-    if not result:
+    if data.username != admin_user:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    if not verify_password(data.password, result.password_hash):
+    if not verify_password(data.password, admin_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     token = create_token(data.username)
@@ -115,6 +120,12 @@ def get_blog_single_page(lang: str = Query("en"), db: Session = Depends(get_db))
     return get_page_content(db, "blog_single_page", lang)
 
 
+@app.get("/api/about")
+def get_about_page(lang: str = Query("en"), db: Session = Depends(get_db)):
+    validate_lang(lang)
+    return get_page_content(db, "about_page", lang)
+
+
 # =============================================
 # PUBLIC ENDPOINTS - DYNAMIC CONTENT
 # =============================================
@@ -135,8 +146,23 @@ def get_service(slug: str, lang: str = Query("en"), db: Session = Depends(get_db
 
 
 @app.get("/api/blogs")
-def get_blogs(lang: str = Query("en"), db: Session = Depends(get_db)):
+def get_blogs(lang: str = Query("en"), tag: str = Query(None), db: Session = Depends(get_db)):
     validate_lang(lang)
+
+    # If tag is provided, filter blogs by tag
+    if tag:
+        query = text(f"""
+            SELECT b.id, b.slug, b.title_{lang} as title, b.description_{lang} as description,
+                   b.author_name, b.image_url, b.thumbnail_url, b.published_at, b.is_published
+            FROM blogs b
+            JOIN blog_tags bt ON b.id = bt.blog_id
+            JOIN tags t ON bt.tag_id = t.id
+            WHERE t.slug = :tag AND b.is_published = true
+            ORDER BY b.published_at DESC
+        """)
+        result = db.execute(query, {"tag": tag}).fetchall()
+        return [dict(row._mapping) for row in result]
+
     return get_dynamic_content(db, "blogs", lang, "is_published = true ORDER BY published_at DESC")
 
 
@@ -146,6 +172,18 @@ def get_blog(slug: str, lang: str = Query("en"), db: Session = Depends(get_db)):
     blog = get_single_item(db, "blogs", lang, slug)
     if not blog:
         raise HTTPException(status_code=404, detail="Blog not found")
+
+    # Get tags for this blog
+    tags_query = text(f"""
+        SELECT t.id, t.slug, t.name_{lang} as name
+        FROM tags t
+        JOIN blog_tags bt ON t.id = bt.tag_id
+        JOIN blogs b ON bt.blog_id = b.id
+        WHERE b.slug = :slug
+    """)
+    tags_result = db.execute(tags_query, {"slug": slug}).fetchall()
+    blog["tags"] = [dict(row._mapping) for row in tags_result]
+
     return blog
 
 
@@ -238,7 +276,7 @@ def admin_update_home(
     if not data:
         raise HTTPException(status_code=400, detail="No data provided")
 
-    # Build UPDATE query dynamically
+    clean_update_data(data)
     set_clauses = ", ".join([f"{key} = :{key}" for key in data.keys()])
     query = text(f"UPDATE home_page SET {set_clauses}, updated_at = NOW() WHERE id = 1")
     db.execute(query, data)
@@ -259,6 +297,7 @@ def admin_update_global(
 ):
     if not data:
         raise HTTPException(status_code=400, detail="No data provided")
+    clean_update_data(data)
     set_clauses = ", ".join([f"{key} = :{key}" for key in data.keys()])
     query = text(f"UPDATE global_content SET {set_clauses}, updated_at = NOW() WHERE id = 1")
     db.execute(query, data)
@@ -279,6 +318,7 @@ def admin_update_services_page(
 ):
     if not data:
         raise HTTPException(status_code=400, detail="No data provided")
+    clean_update_data(data)
     set_clauses = ", ".join([f"{key} = :{key}" for key in data.keys()])
     query = text(f"UPDATE services_page SET {set_clauses}, updated_at = NOW() WHERE id = 1")
     db.execute(query, data)
@@ -299,6 +339,7 @@ def admin_update_service_single_page(
 ):
     if not data:
         raise HTTPException(status_code=400, detail="No data provided")
+    clean_update_data(data)
     set_clauses = ", ".join([f"{key} = :{key}" for key in data.keys()])
     query = text(f"UPDATE service_single_page SET {set_clauses}, updated_at = NOW() WHERE id = 1")
     db.execute(query, data)
@@ -311,6 +352,27 @@ def admin_get_blog_page(username: str = Depends(verify_token), db: Session = Dep
     return get_all_columns(db, "blog_page")
 
 
+@app.get("/api/admin/about")
+def admin_get_about_page(username: str = Depends(verify_token), db: Session = Depends(get_db)):
+    return get_all_columns(db, "about_page")
+
+
+@app.put("/api/admin/about")
+def admin_update_about_page(
+    data: dict = Body(...),
+    username: str = Depends(verify_token),
+    db: Session = Depends(get_db)
+):
+    if not data:
+        raise HTTPException(status_code=400, detail="No data provided")
+    clean_update_data(data)
+    set_clauses = ", ".join([f"{key} = :{key}" for key in data.keys()])
+    query = text(f"UPDATE about_page SET {set_clauses}, updated_at = NOW() WHERE id = 1")
+    db.execute(query, data)
+    db.commit()
+    return {"success": True}
+
+
 @app.put("/api/admin/blog-page")
 def admin_update_blog_page(
     data: dict = Body(...),
@@ -319,6 +381,7 @@ def admin_update_blog_page(
 ):
     if not data:
         raise HTTPException(status_code=400, detail="No data provided")
+    clean_update_data(data)
     set_clauses = ", ".join([f"{key} = :{key}" for key in data.keys()])
     query = text(f"UPDATE blog_page SET {set_clauses}, updated_at = NOW() WHERE id = 1")
     db.execute(query, data)
@@ -339,6 +402,7 @@ def admin_update_blog_single_page(
 ):
     if not data:
         raise HTTPException(status_code=400, detail="No data provided")
+    clean_update_data(data)
     set_clauses = ", ".join([f"{key} = :{key}" for key in data.keys()])
     query = text(f"UPDATE blog_single_page SET {set_clauses}, updated_at = NOW() WHERE id = 1")
     db.execute(query, data)
@@ -359,6 +423,7 @@ def admin_update_contact_form(
 ):
     if not data:
         raise HTTPException(status_code=400, detail="No data provided")
+    clean_update_data(data)
     set_clauses = ", ".join([f"{key} = :{key}" for key in data.keys()])
     query = text(f"UPDATE contact_form SET {set_clauses}, updated_at = NOW() WHERE id = 1")
     db.execute(query, data)
@@ -411,6 +476,7 @@ def admin_update_service(
     db: Session = Depends(get_db)
 ):
     """Update service"""
+    clean_update_data(data)
     set_clauses = ", ".join([f"{key} = :{key}" for key in data.keys()])
     query = text(f"UPDATE services SET {set_clauses}, updated_at = NOW() WHERE id = :id")
     data["id"] = id
@@ -454,12 +520,26 @@ def admin_create_blog(
     username: str = Depends(verify_token),
     db: Session = Depends(get_db)
 ):
+    # Extract tag_ids (handled separately via blog_tags table)
+    tag_ids = data.pop("tag_ids", None)
+    data.pop("tags", None)
+
     columns = ", ".join(data.keys())
     values = ", ".join([f":{key}" for key in data.keys()])
     query = text(f"INSERT INTO blogs ({columns}) VALUES ({values}) RETURNING id")
     result = db.execute(query, data)
+    blog_id = result.fetchone()[0]
+
+    # Insert tags if provided
+    if tag_ids:
+        for tag_id in tag_ids:
+            db.execute(
+                text("INSERT INTO blog_tags (blog_id, tag_id) VALUES (:blog_id, :tag_id)"),
+                {"blog_id": blog_id, "tag_id": tag_id}
+            )
+
     db.commit()
-    return {"success": True, "id": result.fetchone()[0]}
+    return {"success": True, "id": blog_id}
 
 
 @app.put("/api/admin/blogs/{id}")
@@ -469,10 +549,29 @@ def admin_update_blog(
     username: str = Depends(verify_token),
     db: Session = Depends(get_db)
 ):
+    # Extract tag_ids (handled separately via blog_tags table)
+    tag_ids = data.pop("tag_ids", None)
+    # Remove fields that are not columns or auto-managed
+    data.pop("tags", None)
+    data.pop("updated_at", None)
+    data.pop("created_at", None)
+    data.pop("id", None)
+
+    # Update blog
     set_clauses = ", ".join([f"{key} = :{key}" for key in data.keys()])
     query = text(f"UPDATE blogs SET {set_clauses}, updated_at = NOW() WHERE id = :id")
     data["id"] = id
     db.execute(query, data)
+
+    # Update tags if provided
+    if tag_ids is not None:
+        db.execute(text("DELETE FROM blog_tags WHERE blog_id = :blog_id"), {"blog_id": id})
+        for tag_id in tag_ids:
+            db.execute(
+                text("INSERT INTO blog_tags (blog_id, tag_id) VALUES (:blog_id, :tag_id)"),
+                {"blog_id": id, "tag_id": tag_id}
+            )
+
     db.commit()
     return {"success": True}
 
@@ -632,8 +731,8 @@ async def upload_file(
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    # Return URL
-    return {"url": f"http://localhost:8000/uploads/{unique_name}"}
+    # Return URL (relative path for frontend)
+    return {"url": f"/uploads/{unique_name}"}
 
 
 # =============================================

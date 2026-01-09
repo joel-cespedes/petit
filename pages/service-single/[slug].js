@@ -1,116 +1,169 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 import Navbar from '../../components/Navbar/Navbar';
-import PageTitle from '../../components/pagetitle/PageTitle'
-import Scrollbar from '../../components/scrollbar/scrollbar'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
+import PageTitle from '../../components/pagetitle/PageTitle';
 import Footer from '../../components/footer/Footer';
-import Services from '../../api/service'
-import ServiceTab from './ServiceTab';
-import Logo from '/public/images/logo-2.png'
-import Image from 'next/image';
+import Scrollbar from '../../components/scrollbar/scrollbar';
+import Logo from '/public/images/logo-2.png';
+import { useLanguage } from '../../context/LanguageContext';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 const ClickHandler = () => {
     window.scrollTo(10, 0);
-}
+};
 
-const SubmitHandler = (e) => {
-    e.preventDefault()
-}
+const ServiceSinglePage = () => {
+    const router = useRouter();
+    const { slug } = router.query;
+    const { language } = useLanguage();
 
+    const [service, setService] = useState(null);
+    const [allServices, setAllServices] = useState([]);
+    const [pageData, setPageData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-const ServiceSinglePage = (props) => {
+    useEffect(() => {
+        if (!slug) return;
 
-    const router = useRouter()
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const [serviceRes, allServicesRes, pageRes] = await Promise.all([
+                    fetch(`${API_URL}/api/services/${slug}?lang=${language}`),
+                    fetch(`${API_URL}/api/services?lang=${language}`),
+                    fetch(`${API_URL}/api/service-single-page?lang=${language}`)
+                ]);
 
-    const ServiceDetails = Services.find(item => item.slug === router.query.slug)
+                if (serviceRes.ok) {
+                    setService(await serviceRes.json());
+                }
+                if (allServicesRes.ok) {
+                    setAllServices(await allServicesRes.json());
+                }
+                if (pageRes.ok) {
+                    setPageData(await pageRes.json());
+                }
+            } catch (err) {
+                console.error('Error fetching service:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [slug, language]);
+
+    if (loading) {
+        return (
+            <Fragment>
+                <Navbar hclass={'header-style-3'} Logo={Logo} />
+                <PageTitle pageTitle="Loading..." pagesub="Service" />
+                <section className="service-single-section section-padding">
+                    <div className="container">
+                        <p>Loading...</p>
+                    </div>
+                </section>
+                <Footer />
+            </Fragment>
+        );
+    }
+
+    if (!service) {
+        return (
+            <Fragment>
+                <Navbar hclass={'header-style-3'} Logo={Logo} />
+                <PageTitle pageTitle="Service Not Found" pagesub="Service" />
+                <section className="service-single-section section-padding">
+                    <div className="container">
+                        <p>Service not found.</p>
+                        <Link href="/services">Back to Services</Link>
+                    </div>
+                </section>
+                <Footer />
+            </Fragment>
+        );
+    }
 
     return (
         <Fragment>
             <Navbar hclass={'header-style-3'} Logo={Logo} />
-            <PageTitle pageTitle={ServiceDetails?.sTitle} pagesub={'Project'} />
+            <PageTitle pageTitle={service.title} pagesub={pageData?.page_breadcrumb || 'Service'} />
 
             <section className="service-single-section section-padding">
                 <div className="container">
                     <div className="row">
                         <div className="col col-lg-9 order-lg-2 order-1 col-12">
                             <div className="service-single-content">
-                                <div className="service-pic">
-                                    <Image src={ServiceDetails?.sImg} alt="" />
-                                </div>
-                                <h2>Market Research service</h2>
-                                <p>It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame. It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer. Gregor then turned to look out the window at the dull weather. Drops</p>
-                                <p>Peacefully between its four familiar walls. A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame. It showed a lady fitted out with a fur hat and fur boa who sat upright</p>
+                                {/* Section 1 */}
+                                {(service.section_1_title || service.section_1_content) && (
+                                    <>
+                                        {service.section_1_title && <h2>{service.section_1_title}</h2>}
+                                        {service.section_1_content && (
+                                            <div dangerouslySetInnerHTML={{ __html: service.section_1_content }} />
+                                        )}
+                                    </>
+                                )}
 
-                                <h3>Magazine and housed in a nice, gilded frame</h3>
-                                <p>Peacefully between its four familiar walls. A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut</p>
-                                <div className="service-features">
-                                    <ul>
-                                        <li><i className="ti-check-box"></i>Towards the viewer gregor then turned</li>
-                                        <li><i className="ti-check-box"></i>Showed a lady fitted out with a fur hat and</li>
-                                        <li><i className="ti-check-box"></i>Turned to look out the window</li>
-                                    </ul>
-                                    <ul>
-                                        <li><i className="ti-check-box"></i>Towards the viewer gregor then turned</li>
-                                        <li><i className="ti-check-box"></i>Showed a lady fitted out with a fur hat and</li>
-                                        <li><i className="ti-check-box"></i>Turned to look out the window</li>
-                                    </ul>
-                                </div>
+                                {/* Section 2 */}
+                                {(service.section_2_title || service.section_2_content) && (
+                                    <>
+                                        {service.section_2_title && <h3>{service.section_2_title}</h3>}
+                                        {service.section_2_content && (
+                                            <div dangerouslySetInnerHTML={{ __html: service.section_2_content }} />
+                                        )}
+                                    </>
+                                )}
 
-                                <ServiceTab />
-
-                                <div className="request-service">
-                                    <h3>Request this service</h3>
-                                    <form method="post" onSubmit={SubmitHandler}>
-                                        <div>
-                                            <input type="text" className="form-control" name="name" id="name" placeholder="Your Name*" />
-                                        </div>
-                                        <div>
-                                            <input type="email" className="form-control" name="email" id="email" placeholder="Your Email*" />
-                                        </div>
-                                        <div>
-                                            <input type="text" className="form-control" name="phone" id="phone" placeholder="Your Phone*" />
-                                        </div>
-                                        <div className="submit-area">
-                                            <button type="submit">Submit Now</button>
-                                        </div>
-                                    </form>
-                                </div>
+                                {/* Section 3 */}
+                                {(service.section_3_title || service.section_3_content) && (
+                                    <>
+                                        {service.section_3_title && <h3>{service.section_3_title}</h3>}
+                                        {service.section_3_content && (
+                                            <div dangerouslySetInnerHTML={{ __html: service.section_3_content }} />
+                                        )}
+                                    </>
+                                )}
                             </div>
                         </div>
                         <div className="col col-lg-3 order-lg-1 order-2 col-12">
                             <div className="service-sidebar">
                                 <div className="widget service-list-widget">
                                     <ul>
-                                        <li className="current"><Link href="/services">All Service</Link></li>
-                                        {Services.map((service, srv) => (
-                                            <li key={srv}><Link onClick={ClickHandler} href={'/service-single/[slug]'} as={`/service-single/${service.slug}`}>{service.sTitle}</Link></li>
+                                        <li><Link href="/services">{pageData?.sidebar_all_services || 'All Services'}</Link></li>
+                                        {allServices.map((svc) => (
+                                            <li key={svc.id} className={svc.slug === slug ? 'current' : ''}>
+                                                <Link onClick={ClickHandler} href={`/service-single/${svc.slug}`}>
+                                                    {svc.title}
+                                                </Link>
+                                            </li>
                                         ))}
                                     </ul>
                                 </div>
-                                <div className="widget service-features-widget">
-                                    <h3>Our Service Features</h3>
-                                    <ol>
-                                        <li>Quality service guarantee</li>
-                                        <li>100% safe work</li>
-                                        <li>Money back guarantee</li>
-                                        <li>100% satisfied client</li>
-                                    </ol>
-                                </div>
-                                <div className="widget download-widget">
-                                    <ul>
-                                        <li><Link onClick={ClickHandler} href='/contact'><i className="ti-file"></i>Download Brochure</Link></li>
-                                    </ul>
-                                </div>
-                                <div className="widget contact-widget">
-                                    <div>
-                                        <h4>Need help?</h4>
-                                        <p>Covered the whole of her lower arm towards the viewer. Gregor then turned to look out the ?</p>
-                                        <p>Phone: ++8451442514</p>
-                                        <Link onClick={ClickHandler} href='/contact'>Contact With Us</Link>
+                                {pageData?.sidebar_features_title && (
+                                    <div className="widget service-features-widget">
+                                        <h3>{pageData.sidebar_features_title}</h3>
+                                        <ol>
+                                            {pageData.sidebar_feature_1 && <li>{pageData.sidebar_feature_1}</li>}
+                                            {pageData.sidebar_feature_2 && <li>{pageData.sidebar_feature_2}</li>}
+                                            {pageData.sidebar_feature_3 && <li>{pageData.sidebar_feature_3}</li>}
+                                            {pageData.sidebar_feature_4 && <li>{pageData.sidebar_feature_4}</li>}
+                                        </ol>
                                     </div>
-                                </div>
+                                )}
+                                {pageData?.sidebar_help_title && (
+                                    <div className="widget contact-widget">
+                                        <div>
+                                            <h4>{pageData.sidebar_help_title}</h4>
+                                            {pageData.sidebar_help_text && <p>{pageData.sidebar_help_text}</p>}
+                                            {pageData.sidebar_help_phone && <p>Phone: {pageData.sidebar_help_phone}</p>}
+                                            <Link onClick={ClickHandler} href='/contact'>
+                                                {pageData.sidebar_contact_link || 'Contact Us'}
+                                            </Link>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -119,6 +172,7 @@ const ServiceSinglePage = (props) => {
             <Footer />
             <Scrollbar />
         </Fragment>
-    )
+    );
 };
+
 export default ServiceSinglePage;

@@ -17,7 +17,7 @@ const Footer = (props) => {
             <div className="upper-footer">
                 <div className="container">
                     <div className="row">
-                        <div className="col col-lg-3 col-md-6 col-12">
+                        <div className="col col-lg-4 col-md-6 col-12">
                             <div className="widget about-widget">
                                 <div className="logo widget-title">
                                     <Image src={Logo} alt="" />
@@ -25,7 +25,7 @@ const Footer = (props) => {
                                 <p>Samsa was a travelling salesman  and above it there hung a picture that he had recently cut out of an illustrated magazine and housed</p>
                             </div>
                         </div>
-                        <div className="col col-lg-3 col-md-6 col-12">
+                        <div className="col col-lg-4 col-md-6 col-12">
                             <div className="widget link-widget">
                                 <div className="widget-title">
                                     <h3>Navigation</h3>
@@ -36,15 +36,15 @@ const Footer = (props) => {
                                     <li><Link onClick={ClickHandler} href="/services">Case Studies</Link></li>
                                     <li><Link onClick={ClickHandler} href="/services">Our Services</Link></li>
                                 </ul>
-                                <ul>
+                                {/* <ul>
                                     <li><Link onClick={ClickHandler} href="/contact">Provacu Policy</Link></li>
                                     <li><Link onClick={ClickHandler} href="/contact">Contact</Link></li>
                                     <li><Link onClick={ClickHandler} href="/testimonials">Testimonials</Link></li>
                                     <li><Link onClick={ClickHandler} href="/blog">News</Link></li>
-                                </ul>
+                                </ul> */}
                             </div>
                         </div>
-                        <div className="col col-lg-3 col-md-6 col-12">
+                        <div className="col col-lg-4 col-md-6 col-12">
                             <div className="widget contact-widget service-link-widget">
                                 <div className="widget-title">
                                     <h3>Contact Info</h3>
@@ -56,7 +56,7 @@ const Footer = (props) => {
                                 </ul>
                             </div>
                         </div>
-                        <div className="col col-lg-3 col-md-6 col-12">
+                        {/* <div className="col col-lg-3 col-md-6 col-12">
                             <div className="widget newsletter-widget">
                                 <div className="widget-title">
                                     <h3>Newsletter</h3>
@@ -71,7 +71,7 @@ const Footer = (props) => {
                                     </div>
                                 </form>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

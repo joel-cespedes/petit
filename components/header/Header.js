@@ -1,15 +1,37 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from "next/link";
 import MobileMenu from '../MobileMenu/MobileMenu'
 import { totalPrice } from "../../utils";
 import { connect } from "react-redux";
 import { removeFromCart } from "../../store/actions/action";
 import Image from 'next/image';
+import { useLanguage } from '../../context/LanguageContext';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 const Header = (props) => {
     const [menuActive, setMenuState] = useState(false);
     const [cartActive, setcartState] = useState(false);
+    const [globalContent, setGlobalContent] = useState(null);
+    const { language, changeLanguage } = useLanguage();
+
+    useEffect(() => {
+        const fetchGlobalContent = async () => {
+            try {
+                const res = await fetch(`${API_URL}/api/global?lang=${language}`);
+                if (res.ok) {
+                    setGlobalContent(await res.json());
+                }
+            } catch (err) {
+                console.error('Error fetching global content:', err);
+            }
+        };
+        fetchGlobalContent();
+    }, [language]);
+
+    const handleLanguageChange = (e) => {
+        changeLanguage(e.target.value);
+    };
 
     const SubmitHandler = (e) => {
         e.preventDefault()
@@ -27,25 +49,27 @@ const Header = (props) => {
                 <div className="container">
                     <div className="navbar-header">
                         <MobileMenu />
-                        <Link onClick={ClickHandler} className="navbar-brand" href="/home"><Image src={props.Logo} alt="" /></Link>
+                        <Link onClick={ClickHandler} className="navbar-brand" href="/home">
+                            <img src={globalContent?.logo_url || '/images/logo.png'} alt="Logo" style={{height: '50px', width: 'auto'}} />
+                        </Link>
                     </div>
                     <div id="navbar" className="collapse navbar-collapse navigation-holder">
                         <button className="close-navbar"><i className="ti-close"></i></button>
 
                         <ul className="nav navbar-nav mb-2 mb-lg-0">
-                            <li className="menu-item-has-children">
-                                <Link onClick={ClickHandler} href="/">Home</Link>
-                                <ul className="sub-menu">
+                            <li >
+                                <Link onClick={ClickHandler} href="/">{globalContent?.nav_home || 'Home'}</Link>
+                                {/* <ul className="sub-menu">
                                     <li><Link onClick={ClickHandler} href="/home">Home Default</Link></li>
                                     <li><Link onClick={ClickHandler} href="/home-2">Home style 2</Link></li>
                                     <li><Link onClick={ClickHandler} href="/home-3">Home style 3</Link></li>
                                     <li><Link onClick={ClickHandler} href="/home-4">Home static hero</Link></li>
                                     <li><Link onClick={ClickHandler} href="/home-5">Home static hero box</Link></li>
-                                </ul>
+                                </ul> */}
                             </li>
-                            <li className="menu-item-has-children">
+                            {/* <li >
                                 <Link onClick={ClickHandler} href="/">Pages</Link>
-                                <ul className="sub-menu">
+                                 <ul className="sub-menu">
                                     <li><Link onClick={ClickHandler} href="/about">About</Link></li>
                                     <li><Link onClick={ClickHandler} href="/contact">Contact</Link></li>
                                     <li><Link onClick={ClickHandler} href="/testimonials">Testimonials</Link></li>
@@ -61,11 +85,11 @@ const Header = (props) => {
                                             <li><Link onClick={ClickHandler} href="/checkout">Checkout</Link></li>
                                         </ul>
                                     </li>
-                                </ul>
-                            </li>
-                            <li className="menu-item-has-children">
-                                <Link onClick={ClickHandler} href="/">Services</Link>
-                                <ul className="sub-menu">
+                                </ul> 
+                            </li> */}
+                            <li >
+                                <Link onClick={ClickHandler} href="/services">{globalContent?.nav_services || 'Services'}</Link>
+                                {/* <ul className="sub-menu">
                                     <li><Link onClick={ClickHandler} href="/services">Service style 1</Link></li>
                                     <li><Link onClick={ClickHandler} href="/services-s2">Service style 2</Link></li>
                                     <li><Link onClick={ClickHandler} href="/service-s3">Service style 3</Link></li>
@@ -74,32 +98,38 @@ const Header = (props) => {
                                     <li><Link onClick={ClickHandler} href="/service-single/Advanced-Analytics">Advance Analytics</Link></li>
                                     <li><Link onClick={ClickHandler} href="/service-single/Change-Management">Change Management</Link></li>
                                     <li><Link onClick={ClickHandler} href="/service-single/Strategy-Marketing">Stragegy & Marketing</Link></li>
-                                </ul>
+                                </ul> */}
                             </li>
-                            <li className="menu-item-has-children">
+                            {/* <li className="menu-item-has-children">
                                 <Link onClick={ClickHandler} href="/">Projects</Link>
                                 <ul className="sub-menu">
                                     <li><Link onClick={ClickHandler} href="/projects">Projects</Link></li>
                                     <li><Link onClick={ClickHandler} href="/projects-s2">Projects style 2</Link></li>
                                     <li><Link onClick={ClickHandler} href="/project-single/Market-Research">Project single</Link></li>
                                 </ul>
+                            </li> */}
+                            <li >
+                                <Link onClick={ClickHandler} href="/blog">{globalContent?.nav_blog || 'Blog'}</Link>
                             </li>
-                            <li className="menu-item-has-children">
-                                <Link onClick={ClickHandler} href="/">Blog</Link>
-                                <ul className="sub-menu">
-                                    <li><Link onClick={ClickHandler} href="/blog">Blog Default</Link></li>
-                                    <li><Link onClick={ClickHandler} href="/blog-left-sidebar">Blog left sidebar</Link></li>
-                                    <li><Link onClick={ClickHandler} href="/blog-fullwidth">Blog full width</Link></li>
-                                    <li><Link onClick={ClickHandler} href="/blog-single/Consulting-Success-is-the-most-comprehensive-learning">Blog details default</Link></li>
-                                    <li><Link onClick={ClickHandler} href="/blog-single-left-sidebar/Consulting-Success-is-the-most-comprehensive-learning">Blog details left sidebar</Link></li>
-                                    <li><Link onClick={ClickHandler} href="/blog-single-fullwidth/Consulting-Success-is-the-most-comprehensive-learning">Blog details full width</Link></li>
-                                </ul>
+                            <li >
+                                <Link onClick={ClickHandler} href="/about">{globalContent?.nav_about || 'About Us'}</Link>
                             </li>
-                            <li><Link onClick={ClickHandler} href="/contact">Contact</Link></li>
+                            <li className="menu-language">
+                                <select
+                                    className="language-select"
+                                    value={language}
+                                    onChange={handleLanguageChange}
+                                    id="language-select"
+                                >
+                                    <option value="en">🇬🇧 EN</option>
+                                    <option value="es">🇪🇸 ES</option>
+                                    <option value="nl">🇳🇱 NL</option>
+                                </select>
+                            </li>
                         </ul>
                     </div>
 
-                    <div className="cart-search-contact">
+                    {/* <div className="cart-search-contact">
 
                         <div className="header-search-form-wrapper">
                             <button onClick={() => setMenuState(!menuActive)} className="search-toggle-btn"><i
@@ -161,7 +191,7 @@ const Header = (props) => {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </nav>
         </header>

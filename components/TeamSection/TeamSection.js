@@ -9,7 +9,7 @@ const ClickHandler = () => {
     window.scrollTo(10, 0);
 }
 
-const TeamSection = (props) => {
+const TeamSection = ({ data }) => {
 
     const [isOpen, setOpen] = useState(false)
 
@@ -21,9 +21,9 @@ const TeamSection = (props) => {
                     <div className="col col-xl-8 col-lg-10">
                         <div className="cta-content">
                             <div className="video-holder">
-                                <button className="btn-wrap" onClick={() => setOpen(true)}><i className="fi flaticon-video-player" aria-hidden="true"></i><span>See more about our company</span></button>
+                                <button className="btn-wrap" onClick={() => setOpen(true)}><i className="fi flaticon-video-player" aria-hidden="true"></i><span>{data?.cta_video_text || ''}</span></button>
                             </div>
-                            <h3>We are the most trustable consulting agency around the world</h3>
+                            <h3>{data?.cta_title || ''}</h3>
                         </div>
                     </div>
                 </div>
@@ -31,13 +31,13 @@ const TeamSection = (props) => {
                     <div className="row">
                         <div className="col col-lg-6 col-12">
                             <div className="section-title-s4">
-                                <span>Team members</span>
-                                <h2>See our passionate <br />team members</h2>
+                                <span>{data?.team_tag || ''}</span>
+                                <h2>{data?.team_title || ''}</h2>
                             </div>
                         </div>
                         <div className="col col-lg-6 col-12">
                             <div className="title-text">
-                                <p>Showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer gregor then turned to look arround the world </p>
+                                <p>{data?.team_description || ''}</p>
                             </div>
                         </div>
                     </div>

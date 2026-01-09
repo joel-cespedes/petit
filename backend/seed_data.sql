@@ -12,14 +12,32 @@ UPDATE home_page SET
     hero_button_nl = 'Ontdek Meer',
     hero_image = '/images/slider/slide-1.jpg',
 
+    -- Features Section
+    feature1_icon = 'flaticon-sheriff',
+    feature1_title_en = 'Business Consulting',
+    feature1_title_es = 'Consultoría Empresarial',
+    feature1_title_nl = 'Bedrijfsadvies',
+    feature1_description_en = 'Peacefully between its four familiar walls. A collection of textile samples lay spread out on the table.',
+    feature1_description_es = 'Pacíficamente entre sus cuatro paredes familiares. Una colección de muestras textiles estaba esparcida sobre la mesa.',
+    feature1_description_nl = 'Vredig tussen zijn vier vertrouwde muren. Een verzameling textielen lag uitgespreid op de tafel.',
+
+    feature2_icon = 'flaticon-diamond',
+    feature2_title_en = 'Market Research',
+    feature2_title_es = 'Investigación de Mercado',
+    feature2_title_nl = 'Marktonderzoek',
+    feature2_description_en = 'Peacefully between its four familiar walls. A collection of textile samples lay spread out on the table.',
+    feature2_description_es = 'Pacíficamente entre sus cuatro paredes familiares. Una colección de muestras textiles estaba esparcida sobre la mesa.',
+    feature2_description_nl = 'Vredig tussen zijn vier vertrouwde muren. Een verzameling textielen lag uitgespreid op de tafel.',
+
+    feature3_icon = 'flaticon-idea',
+    feature3_title_en = 'Thought Leadership',
+    feature3_title_es = 'Liderazgo de Pensamiento',
+    feature3_title_nl = 'Thought Leadership',
+    feature3_description_en = 'Peacefully between its four familiar walls. A collection of textile samples lay spread out on the table.',
+    feature3_description_es = 'Pacíficamente entre sus cuatro paredes familiares. Una colección de muestras textiles estaba esparcida sobre la mesa.',
+    feature3_description_nl = 'Vredig tussen zijn vier vertrouwde muren. Een verzameling textielen lag uitgespreid op de tafel.',
+
     -- About Section
-    about_experience_years = '25',
-    about_experience_text_en = 'Years of',
-    about_experience_text_es = 'Años de',
-    about_experience_text_nl = 'Jaar',
-    about_experience_highlight_en = 'Experience',
-    about_experience_highlight_es = 'Experiencia',
-    about_experience_highlight_nl = 'Ervaring',
     about_tag_en = 'We are consulting agency!',
     about_tag_es = '¡Somos una agencia de consultoría!',
     about_tag_nl = 'Wij zijn een adviesbureau!',
@@ -35,11 +53,23 @@ UPDATE home_page SET
     about_phone = '012345645, +6546521145',
     about_image = '/images/about/about-2.jpg',
 
+    -- Services Section Header
+    services_tag_en = 'Services',
+    services_tag_es = 'Servicios',
+    services_tag_nl = 'Diensten',
+    services_title_en = 'Best services',
+    services_title_es = 'Mejores servicios',
+    services_title_nl = 'Beste diensten',
+    services_description_en = 'Showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer. Gregor then turned to look',
+    services_description_es = 'Mostraba a una dama equipada con un sombrero de piel y una boa de piel que estaba sentada erguida, levantando un pesado manguito de piel que cubría todo su antebrazo hacia el espectador.',
+    services_description_nl = 'Toonde een dame uitgerust met een bontmuts die rechtop zat, een zware bontmof opheffend naar de kijker.',
+
     -- Testimonial Section
     testimonial_quote_en = 'Lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table Samsa was a travelling salesman it there hung a picture that he had recently cut out of an',
     testimonial_quote_es = 'Yacía pacíficamente entre sus cuatro paredes familiares. Una colección de muestras textiles estaba esparcida sobre la mesa. Samsa era un viajante de comercio y encima colgaba una imagen que había recortado recientemente.',
     testimonial_quote_nl = 'Lag vredig tussen zijn vier vertrouwde muren. Een verzameling textielen lag uitgespreid op de tafel. Samsa was een handelsreiziger en daarboven hing een foto.',
     testimonial_author = 'Thomas Calvin',
+    testimonial_quote_icon = '/images/quote.png',
 
     -- FunFact Section
     funfact_1_number = '25',
@@ -121,6 +151,9 @@ UPDATE global_content SET
     nav_contact_en = 'Contact',
     nav_contact_es = 'Contacto',
     nav_contact_nl = 'Contact',
+    nav_about_en = 'About Us',
+    nav_about_es = 'Quienes Somos',
+    nav_about_nl = 'Over Ons',
 
     footer_about_text_en = 'Samsa was a travelling salesman and above it there hung a picture that he had recently cut out of an illustrated magazine and housed.',
     footer_about_text_es = 'Samsa era un viajante de comercio y encima colgaba una imagen que había recortado recientemente de una revista ilustrada.',
@@ -163,6 +196,69 @@ UPDATE global_content SET
     social_pinterest = 'https://pinterest.com',
 
     logo_url = '/images/logo.png'
+WHERE id = 1;
+
+-- Insert about_page initial row
+INSERT INTO about_page (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
+
+-- Update about_page
+UPDATE about_page SET
+    page_title_en = 'About Us',
+    page_title_es = 'Quienes Somos',
+    page_title_nl = 'Over Ons',
+    page_breadcrumb_en = 'About',
+    page_breadcrumb_es = 'Nosotros',
+    page_breadcrumb_nl = 'Over',
+    background_image = '/images/page-title.jpg',
+
+    profile_image = '/images/team/img-1.jpg',
+    name = 'Jhair',
+    title_en = 'Founder & CEO',
+    title_es = 'Fundador y CEO',
+    title_nl = 'Oprichter & CEO',
+
+    phone = '+1 234 567 890',
+    email = 'info@jhair.com',
+    experience_en = '15 Years',
+    experience_es = '15 Años',
+    experience_nl = '15 Jaar',
+    address_en = '123 Business Street, City, Country',
+    address_es = 'Calle Negocios 123, Ciudad, País',
+    address_nl = 'Zakenstraat 123, Stad, Land',
+
+    social_facebook = 'https://facebook.com',
+    social_twitter = 'https://twitter.com',
+    social_linkedin = 'https://linkedin.com',
+    social_pinterest = 'https://pinterest.com',
+    social_instagram = 'https://instagram.com',
+
+    about_title_en = 'About Me',
+    about_title_es = 'Sobre Mí',
+    about_title_nl = 'Over Mij',
+    about_content_en = 'I am a passionate entrepreneur with over 15 years of experience in business consulting and strategy development. My journey began with a simple vision: to help businesses thrive in an ever-changing market landscape.',
+    about_content_es = 'Soy un emprendedor apasionado con más de 15 años de experiencia en consultoría empresarial y desarrollo de estrategias. Mi viaje comenzó con una visión simple: ayudar a las empresas a prosperar en un panorama de mercado en constante cambio.',
+    about_content_nl = 'Ik ben een gepassioneerde ondernemer met meer dan 15 jaar ervaring in bedrijfsadvies en strategieontwikkeling. Mijn reis begon met een eenvoudige visie: bedrijven helpen bloeien in een steeds veranderend marktlandschap.',
+
+    experience_title_en = 'Experience',
+    experience_title_es = 'Experiencia',
+    experience_title_nl = 'Ervaring',
+    experience_content_en = 'Throughout my career, I have worked with companies of all sizes, from startups to Fortune 500 corporations. My expertise spans across multiple industries including technology, finance, and healthcare.',
+    experience_content_es = 'A lo largo de mi carrera, he trabajado con empresas de todos los tamaños, desde startups hasta corporaciones Fortune 500. Mi experiencia abarca múltiples industrias, incluyendo tecnología, finanzas y salud.',
+    experience_content_nl = 'Gedurende mijn carrière heb ik gewerkt met bedrijven van alle groottes, van startups tot Fortune 500-bedrijven. Mijn expertise strekt zich uit over meerdere industrieën, waaronder technologie, financiën en gezondheidszorg.',
+
+    education_title_en = 'Education',
+    education_title_es = 'Educación',
+    education_title_nl = 'Opleiding',
+    education_content_en = 'MBA from Harvard Business School, Bachelor''s degree in Business Administration from MIT. Continuous learner with multiple certifications in project management and strategic planning.',
+    education_content_es = 'MBA de Harvard Business School, Licenciatura en Administración de Empresas del MIT. Aprendiz continuo con múltiples certificaciones en gestión de proyectos y planificación estratégica.',
+    education_content_nl = 'MBA van Harvard Business School, Bachelor in Bedrijfskunde van MIT. Continu lerende met meerdere certificeringen in projectmanagement en strategische planning.',
+
+    achievements_title_en = 'Achievements',
+    achievements_title_es = 'Logros',
+    achievements_title_nl = 'Prestaties',
+    achievements_content_en = '<ul><li>- Best Business Consultant Award 2020</li><li>- Successfully led 100+ consulting projects</li><li>- Featured speaker at international business conferences</li><li>- Author of "Strategic Growth" bestseller book</li></ul>',
+    achievements_content_es = '<ul><li>- Premio al Mejor Consultor Empresarial 2020</li><li>- Lideró con éxito más de 100 proyectos de consultoría</li><li>- Orador destacado en conferencias de negocios internacionales</li><li>- Autor del libro bestseller "Crecimiento Estratégico"</li></ul>',
+    achievements_content_nl = '<ul><li>- Beste Bedrijfsadviseur Award 2020</li><li>- Succesvol geleid 100+ adviesprojecten</li><li>- Uitgelichte spreker op internationale zakelijke conferenties</li><li>- Auteur van bestseller boek "Strategische Groei"</li></ul>'
 WHERE id = 1;
 
 -- Update contact_form
@@ -277,8 +373,7 @@ UPDATE services SET
     section_3_title_nl = 'Resultaten',
     section_3_content_en = '<p>Our clients see measurable improvements in their market positioning and business performance.</p>',
     section_3_content_es = '<p>Nuestros clientes ven mejoras medibles en su posicionamiento de mercado y rendimiento empresarial.</p>',
-    section_3_content_nl = '<p>Onze klanten zien meetbare verbeteringen in hun marktpositie.</p>',
-    image_url = '/images/services/service-1.jpg'
+    section_3_content_nl = '<p>Onze klanten zien meetbare verbeteringen in hun marktpositie.</p>'
 WHERE slug = 'market-research';
 
 UPDATE services SET
@@ -302,8 +397,7 @@ UPDATE services SET
     section_3_title_nl = 'Resultaten',
     section_3_content_en = '<p>Improved financial performance and sustainable growth for your business.</p>',
     section_3_content_es = '<p>Mejor rendimiento financiero y crecimiento sostenible para su negocio.</p>',
-    section_3_content_nl = '<p>Verbeterde financiële prestaties en duurzame groei voor uw bedrijf.</p>',
-    image_url = '/images/services/service-2.jpg'
+    section_3_content_nl = '<p>Verbeterde financiële prestaties en duurzame groei voor uw bedrijf.</p>'
 WHERE slug = 'corporate-finance';
 
 UPDATE services SET
@@ -327,6 +421,133 @@ UPDATE services SET
     section_3_title_nl = 'Resultaten',
     section_3_content_en = '<p>Better business decisions backed by comprehensive data analysis.</p>',
     section_3_content_es = '<p>Mejores decisiones comerciales respaldadas por un análisis de datos completo.</p>',
-    section_3_content_nl = '<p>Betere zakelijke beslissingen ondersteund door data-analyse.</p>',
-    image_url = '/images/services/service-3.jpg'
+    section_3_content_nl = '<p>Betere zakelijke beslissingen ondersteund door data-analyse.</p>'
 WHERE slug = 'advanced-analytics';
+
+-- Update blog_page with background image
+UPDATE blog_page SET
+    background_image = '/images/page-title.jpg'
+WHERE id = 1;
+
+-- Insert Tags (use ON CONFLICT to avoid duplicates)
+INSERT INTO tags (slug, name_en, name_es, name_nl) VALUES
+('business', 'Business', 'Negocios', 'Zakelijk'),
+('technology', 'Technology', 'Tecnología', 'Technologie')
+ON CONFLICT (slug) DO NOTHING;
+
+-- Insert 6 Example Blogs
+INSERT INTO blogs (slug, title_en, title_es, title_nl, description_en, description_es, description_nl, content_en, content_es, content_nl, image_url, thumbnail_url, published_at, is_published) VALUES
+('consulting-success-strategies',
+ 'Consulting Success: Key Strategies for Growth',
+ 'Éxito en Consultoría: Estrategias Clave para el Crecimiento',
+ 'Consultingsucces: Belangrijke Strategieën voor Groei',
+ 'Discover the essential strategies that leading consulting firms use to drive growth and success.',
+ 'Descubre las estrategias esenciales que utilizan las principales firmas de consultoría para impulsar el crecimiento.',
+ 'Ontdek de essentiële strategieën die toonaangevende adviesbureaus gebruiken voor groei.',
+ '<p>In today''s competitive business landscape, consulting firms must continuously evolve their strategies to stay ahead. This article explores the key approaches that successful consultants use to drive growth.</p><h3>1. Client-Centric Approach</h3><p>The most successful consulting firms prioritize their clients'' needs above all else. By deeply understanding client challenges and goals, consultants can provide tailored solutions that deliver real value.</p><h3>2. Continuous Learning</h3><p>The business world is constantly changing. Successful consultants invest in continuous learning and skill development to stay relevant and provide cutting-edge advice.</p>',
+ '<p>En el competitivo panorama empresarial actual, las firmas de consultoría deben evolucionar continuamente sus estrategias para mantenerse a la vanguardia.</p><h3>1. Enfoque Centrado en el Cliente</h3><p>Las firmas de consultoría más exitosas priorizan las necesidades de sus clientes por encima de todo.</p><h3>2. Aprendizaje Continuo</h3><p>El mundo empresarial está en constante cambio. Los consultores exitosos invierten en aprendizaje continuo.</p>',
+ '<p>In het huidige competitieve bedrijfslandschap moeten adviesbureaus hun strategieën continu ontwikkelen om voorop te blijven.</p><h3>1. Klantgerichte Aanpak</h3><p>De meest succesvolle adviesbureaus geven prioriteit aan de behoeften van hun klanten.</p>',
+ '/images/blog/img-1.jpg',
+ '/images/blog/img-1.jpg',
+ '2024-01-15',
+ true),
+
+('digital-transformation-guide',
+ 'A Complete Guide to Digital Transformation',
+ 'Guía Completa para la Transformación Digital',
+ 'Complete Gids voor Digitale Transformatie',
+ 'Learn how businesses are leveraging digital technologies to transform their operations and customer experiences.',
+ 'Aprende cómo las empresas están aprovechando las tecnologías digitales para transformar sus operaciones.',
+ 'Leer hoe bedrijven digitale technologieën benutten om hun activiteiten te transformeren.',
+ '<p>Digital transformation is no longer optional—it''s essential for business survival. This guide covers the fundamental aspects of implementing a successful digital transformation strategy.</p><h3>Understanding Digital Transformation</h3><p>At its core, digital transformation involves using technology to fundamentally change how businesses operate and deliver value to customers.</p><h3>Key Technologies</h3><p>Cloud computing, artificial intelligence, and data analytics are driving the digital revolution across industries.</p>',
+ '<p>La transformación digital ya no es opcional—es esencial para la supervivencia empresarial.</p><h3>Entendiendo la Transformación Digital</h3><p>En esencia, la transformación digital implica usar la tecnología para cambiar fundamentalmente cómo operan las empresas.</p>',
+ '<p>Digitale transformatie is niet langer optioneel—het is essentieel voor bedrijfsoverleving.</p><h3>Digitale Transformatie Begrijpen</h3><p>In de kern gaat digitale transformatie over het gebruik van technologie om fundamenteel te veranderen hoe bedrijven opereren.</p>',
+ '/images/blog/img-2.jpg',
+ '/images/blog/img-2.jpg',
+ '2024-01-20',
+ true),
+
+('financial-planning-tips',
+ 'Top 10 Financial Planning Tips for Businesses',
+ '10 Consejos de Planificación Financiera para Empresas',
+ 'Top 10 Financiële Planningstips voor Bedrijven',
+ 'Essential financial planning strategies that every business owner should know to ensure long-term success.',
+ 'Estrategias esenciales de planificación financiera que todo empresario debe conocer.',
+ 'Essentiële financiële planningsstrategieën die elke ondernemer moet kennen.',
+ '<p>Sound financial planning is the foundation of any successful business. Here are ten essential tips to help you manage your business finances effectively.</p><h3>1. Create a Budget</h3><p>A detailed budget helps you track expenses and allocate resources efficiently.</p><h3>2. Build an Emergency Fund</h3><p>Having cash reserves protects your business during unexpected downturns.</p>',
+ '<p>Una planificación financiera sólida es la base de cualquier negocio exitoso.</p><h3>1. Crear un Presupuesto</h3><p>Un presupuesto detallado te ayuda a rastrear gastos y asignar recursos eficientemente.</p>',
+ '<p>Goede financiële planning is de basis van elk succesvol bedrijf.</p><h3>1. Maak een Budget</h3><p>Een gedetailleerd budget helpt u uitgaven te volgen en middelen efficiënt toe te wijzen.</p>',
+ '/images/blog/img-3.jpg',
+ '/images/blog/img-3.jpg',
+ '2024-02-01',
+ true),
+
+('leadership-in-crisis',
+ 'Leadership in Times of Crisis',
+ 'Liderazgo en Tiempos de Crisis',
+ 'Leiderschap in Crisistijden',
+ 'How effective leaders navigate their organizations through challenging times and emerge stronger.',
+ 'Cómo los líderes efectivos guían a sus organizaciones a través de tiempos difíciles.',
+ 'Hoe effectieve leiders hun organisaties door uitdagende tijden navigeren.',
+ '<p>Crisis situations test the mettle of every leader. This article examines the qualities and strategies that define effective crisis leadership.</p><h3>Stay Calm and Focused</h3><p>In times of crisis, teams look to their leaders for guidance and reassurance.</p><h3>Communicate Transparently</h3><p>Clear, honest communication builds trust and keeps everyone aligned.</p>',
+ '<p>Las situaciones de crisis ponen a prueba a cada líder.</p><h3>Mantén la Calma</h3><p>En tiempos de crisis, los equipos buscan orientación en sus líderes.</p>',
+ '<p>Crisissituaties testen elke leider.</p><h3>Blijf Kalm en Gefocust</h3><p>In tijden van crisis kijken teams naar hun leiders voor begeleiding.</p>',
+ '/images/blog/img-4.jpg',
+ '/images/blog/img-4.jpg',
+ '2024-02-10',
+ true),
+
+('sustainable-business-practices',
+ 'Implementing Sustainable Business Practices',
+ 'Implementando Prácticas Empresariales Sostenibles',
+ 'Implementatie van Duurzame Bedrijfspraktijken',
+ 'A comprehensive look at how businesses can adopt sustainable practices while maintaining profitability.',
+ 'Una mirada integral sobre cómo las empresas pueden adoptar prácticas sostenibles.',
+ 'Een uitgebreide blik op hoe bedrijven duurzame praktijken kunnen toepassen.',
+ '<p>Sustainability is no longer just a buzzword—it''s a business imperative. Learn how to integrate sustainable practices into your operations.</p><h3>Why Sustainability Matters</h3><p>Consumers increasingly prefer brands that demonstrate environmental responsibility.</p><h3>Getting Started</h3><p>Begin with an audit of your current environmental impact and identify areas for improvement.</p>',
+ '<p>La sostenibilidad ya no es solo una palabra de moda—es un imperativo empresarial.</p><h3>Por Qué Importa la Sostenibilidad</h3><p>Los consumidores prefieren cada vez más las marcas que demuestran responsabilidad ambiental.</p>',
+ '<p>Duurzaamheid is niet langer alleen een modewoord—het is een zakelijke noodzaak.</p><h3>Waarom Duurzaamheid Belangrijk Is</h3><p>Consumenten geven steeds meer de voorkeur aan merken die milieuverantwoordelijkheid tonen.</p>',
+ '/images/blog/img-5.jpg',
+ '/images/blog/img-5.jpg',
+ '2024-02-15',
+ true),
+
+('market-trends-2024',
+ 'Market Trends to Watch in 2024',
+ 'Tendencias del Mercado a Observar en 2024',
+ 'Markttrends om te Volgen in 2024',
+ 'Stay ahead of the curve with our analysis of the most important market trends shaping business in 2024.',
+ 'Mantente a la vanguardia con nuestro análisis de las tendencias más importantes del mercado.',
+ 'Blijf voorop met onze analyse van de belangrijkste markttrends die het bedrijfsleven vormgeven.',
+ '<p>As we move through 2024, several key trends are reshaping the business landscape. Understanding these trends is crucial for strategic planning.</p><h3>AI Integration</h3><p>Artificial intelligence is becoming increasingly integrated into business operations across all sectors.</p><h3>Remote Work Evolution</h3><p>The future of work continues to evolve, with hybrid models becoming the new standard.</p>',
+ '<p>A medida que avanzamos en 2024, varias tendencias clave están remodelando el panorama empresarial.</p><h3>Integración de IA</h3><p>La inteligencia artificial se está integrando cada vez más en las operaciones empresariales.</p>',
+ '<p>Terwijl we door 2024 gaan, hervormen verschillende belangrijke trends het zakelijke landschap.</p><h3>AI-Integratie</h3><p>Kunstmatige intelligentie wordt steeds meer geïntegreerd in bedrijfsactiviteiten.</p>',
+ '/images/blog/img-6.jpg',
+ '/images/blog/img-6.jpg',
+ '2024-02-20',
+ true);
+
+-- Associate blogs with tags
+INSERT INTO blog_tags (blog_id, tag_id)
+SELECT b.id, t.id FROM blogs b, tags t
+WHERE b.slug = 'consulting-success-strategies' AND t.slug IN ('business', 'consulting');
+
+INSERT INTO blog_tags (blog_id, tag_id)
+SELECT b.id, t.id FROM blogs b, tags t
+WHERE b.slug = 'digital-transformation-guide' AND t.slug IN ('technology', 'business');
+
+INSERT INTO blog_tags (blog_id, tag_id)
+SELECT b.id, t.id FROM blogs b, tags t
+WHERE b.slug = 'financial-planning-tips' AND t.slug IN ('finance', 'business');
+
+INSERT INTO blog_tags (blog_id, tag_id)
+SELECT b.id, t.id FROM blogs b, tags t
+WHERE b.slug = 'leadership-in-crisis' AND t.slug IN ('business', 'strategy');
+
+INSERT INTO blog_tags (blog_id, tag_id)
+SELECT b.id, t.id FROM blogs b, tags t
+WHERE b.slug = 'sustainable-business-practices' AND t.slug IN ('business', 'strategy');
+
+INSERT INTO blog_tags (blog_id, tag_id)
+SELECT b.id, t.id FROM blogs b, tags t
+WHERE b.slug = 'market-trends-2024' AND t.slug IN ('business', 'marketing');

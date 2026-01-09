@@ -13,6 +13,7 @@ import { Provider } from "react-redux";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Head from "next/head";
+import { LanguageProvider } from "../context/LanguageContext";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -22,8 +23,10 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <Component {...pageProps} />
-          <ToastContainer />
+          <LanguageProvider>
+            <Component {...pageProps} />
+            <ToastContainer />
+          </LanguageProvider>
         </PersistGate>
       </Provider>
     </div>
