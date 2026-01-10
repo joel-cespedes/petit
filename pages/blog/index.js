@@ -120,6 +120,7 @@ const BlogPage = () => {
             <PageTitle
                 pageTitle={getPageTitle()}
                 pagesub={pageData?.page_breadcrumb || 'Blog'}
+                backgroundImage={pageData?.background_image}
             />
             <section className="blog-pg-section section-padding">
                 <div className="container">

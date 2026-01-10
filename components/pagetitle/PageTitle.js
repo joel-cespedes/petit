@@ -2,8 +2,12 @@ import React from 'react'
 import Link from "next/link";
 
 const PageTitle = (props) => {
+    const sectionStyle = props.backgroundImage
+        ? { backgroundImage: `url(${props.backgroundImage})` }
+        : {};
+
     return (
-        <section className="page-title">
+        <section className="page-title" style={sectionStyle}>
             <div className="container">
                 <div className="row">
                     <div className="col col-xs-12">

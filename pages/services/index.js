@@ -40,6 +40,7 @@ const ServicePage = () => {
             <PageTitle
                 pageTitle={pageData?.page_title || ''}
                 pagesub={pageData?.page_breadcrumb || ''}
+                backgroundImage={pageData?.background_image}
             />
             <ServiceSection data={pageData} services={services} />
             <Footer />

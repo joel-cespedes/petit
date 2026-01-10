@@ -89,7 +89,7 @@ const ServiceSinglePage = () => {
     return (
         <Fragment>
             <Navbar hclass={'header-style-3'} Logo={Logo} />
-            <PageTitle pageTitle={service.title} pagesub={pageData?.page_breadcrumb || 'Service'} />
+            <PageTitle pageTitle={service.title} pagesub={pageData?.page_breadcrumb || 'Service'} backgroundImage={pageData?.background_image} />
 
             <section className="service-single-section section-padding">
                 <div className="container">

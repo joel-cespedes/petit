@@ -272,6 +272,7 @@ UPDATE service_single_page SET
     page_breadcrumb_en = 'Service Details',
     page_breadcrumb_es = 'Detalles del Servicio',
     page_breadcrumb_nl = 'Service Details',
+    background_image = '/images/page-title.jpg',
 
     sidebar_all_services_en = 'All Services',
     sidebar_all_services_es = 'Todos los Servicios',
@@ -330,6 +331,7 @@ UPDATE blog_single_page SET
     page_breadcrumb_en = 'Blog',
     page_breadcrumb_es = 'Blog',
     page_breadcrumb_nl = 'Blog',
+    background_image = '/images/page-title.jpg',
 
     tags_label_en = 'Tags',
     tags_label_es = 'Etiquetas',
@@ -383,6 +385,7 @@ UPDATE services_page SET
     page_breadcrumb_en = 'Services',
     page_breadcrumb_es = 'Servicios',
     page_breadcrumb_nl = 'Diensten',
+    background_image = '/images/page-title.jpg',
     section_tag_en = 'Services',
     section_tag_es = 'Servicios',
     section_tag_nl = 'Diensten',

@@ -44,7 +44,7 @@ const AboutPage = () => {
     return (
         <Fragment>
             <Navbar hclass={'header-style-3'} Logo={Logo} />
-            <PageTitle pageTitle={data?.page_title || 'About Us'} pagesub={data?.page_breadcrumb || 'About'} />
+            <PageTitle pageTitle={data?.page_title || 'About Us'} pagesub={data?.page_breadcrumb || 'About'} backgroundImage={data?.background_image} />
             <section className="team-sigle-section section-padding">
                 <div className="container">
                     <div className="row">

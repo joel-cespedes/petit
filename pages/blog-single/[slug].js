@@ -57,7 +57,7 @@ const BlogDetails = () => {
     return (
         <Fragment>
             <Navbar hclass={'header-style-3'} Logo={Logo}/>
-            <PageTitle pageTitle={blog?.title || 'Blog'} pagesub={'Blog'} />
+            <PageTitle pageTitle={blog?.title || 'Blog'} pagesub={pageContent?.page_breadcrumb || 'Blog'} backgroundImage={pageContent?.background_image} />
             <BlogSingle blog={blog} pageContent={pageContent} />
             <Footer />
             <Scrollbar />

@@ -164,6 +164,7 @@ CREATE TABLE services_page (
     page_breadcrumb_en VARCHAR(100),
     page_breadcrumb_es VARCHAR(100),
     page_breadcrumb_nl VARCHAR(100),
+    background_image VARCHAR(500),
 
     -- Section title
     section_tag_en VARCHAR(100),
@@ -191,6 +192,7 @@ CREATE TABLE service_single_page (
     page_breadcrumb_en VARCHAR(100),
     page_breadcrumb_es VARCHAR(100),
     page_breadcrumb_nl VARCHAR(100),
+    background_image VARCHAR(500),
 
     -- Sidebar - Service list widget
     sidebar_all_services_en VARCHAR(100),
@@ -439,6 +441,7 @@ CREATE TABLE blog_single_page (
     page_breadcrumb_en VARCHAR(100),
     page_breadcrumb_es VARCHAR(100),
     page_breadcrumb_nl VARCHAR(100),
+    background_image VARCHAR(500),
 
     tags_label_en VARCHAR(50),
     tags_label_es VARCHAR(50),
