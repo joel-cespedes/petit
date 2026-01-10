@@ -8,8 +8,11 @@ from typing import Optional
 import os
 import uuid
 import shutil
-from database import get_db, get_page_content, get_dynamic_content, get_single_item
-from auth import verify_password, create_token, verify_token
+from database import get_db, get_page_content, get_dynamic_content, get_single_item, engine
+from auth import verify_password, create_token, verify_token, hash_password
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Create uploads directory in frontend's public folder
 UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "..", "public", "uploads")
@@ -17,10 +20,44 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 app = FastAPI(title="Jhair API", version="1.0.0")
 
+
+# Auto-create admin user from environment variables on startup
+@app.on_event("startup")
+def create_default_admin():
+    admin_user = os.getenv("ADMIN_USER")
+    admin_pass = os.getenv("ADMIN_PASS")
+
+    if not admin_user or not admin_pass:
+        print("WARNING: ADMIN_USER or ADMIN_PASS not set. Skipping admin creation.")
+        return
+
+    try:
+        with engine.connect() as conn:
+            # Check if admin exists
+            result = conn.execute(
+                text("SELECT id FROM admin_users WHERE username = :username"),
+                {"username": admin_user}
+            ).fetchone()
+
+            if not result:
+                # Create admin
+                password_hash = hash_password(admin_pass)
+                conn.execute(
+                    text("INSERT INTO admin_users (username, password_hash) VALUES (:username, :password_hash)"),
+                    {"username": admin_user, "password_hash": password_hash}
+                )
+                conn.commit()
+                print(f"Created admin user: {admin_user}")
+            else:
+                print(f"Admin user '{admin_user}' already exists.")
+    except Exception as e:
+        print(f"Error creating admin: {e}")
+
 # CORS - allow frontend to access API
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[FRONTEND_URL, "http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -1,3 +1,9 @@
+-- Insert admin user
+INSERT INTO admin_users (username, password_hash) VALUES (
+    'pttadmin',
+    '$2b$12$u1gca2iaMs4syHZuvQ04kOaTXk/VQEAvEPmTuU/FHbcL60OhR7iXe'
+) ON CONFLICT (username) DO NOTHING;
+
 -- Insert initial rows for all tables
 INSERT INTO home_page (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
 INSERT INTO global_content (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
