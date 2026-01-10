@@ -142,5 +142,5 @@ const styles = {
         borderRadius: '4px',
         marginBottom: '20px',
         textAlign: 'center',
-    },
+    }
 };
