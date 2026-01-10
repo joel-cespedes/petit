@@ -39,7 +39,7 @@ const HomePage = () => {
                 }
                 if (blogsRes.ok) {
                     const data = await blogsRes.json();
-                    setBlogs(data);
+                    setBlogs(data.blogs || []);
                 }
             } catch (err) {
                 console.error('Error fetching data:', err);

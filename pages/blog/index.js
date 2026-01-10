@@ -16,20 +16,21 @@ const ClickHandler = () => {
 
 const BlogPage = () => {
     const router = useRouter();
-    const { search, tag } = router.query;
+    const { search, tag, page: pageQuery } = router.query;
     const { language } = useLanguage();
     const [blogs, setBlogs] = useState([]);
-    const [filteredBlogs, setFilteredBlogs] = useState([]);
+    const [pagination, setPagination] = useState(null);
     const [pageData, setPageData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [currentTag, setCurrentTag] = useState(null);
+
+    const currentPage = parseInt(pageQuery) || 1;
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                // Build URL with tag filter if present
-                let blogsUrl = `${API_URL}/api/blogs?lang=${language}`;
+                let blogsUrl = `${API_URL}/api/blogs?lang=${language}&page=${currentPage}&per_page=6`;
                 if (tag) {
                     blogsUrl += `&tag=${encodeURIComponent(tag)}`;
                 }
@@ -40,8 +41,9 @@ const BlogPage = () => {
                 ]);
 
                 if (blogsRes.ok) {
-                    const blogsData = await blogsRes.json();
-                    setBlogs(blogsData);
+                    const data = await blogsRes.json();
+                    setBlogs(data.blogs);
+                    setPagination(data.pagination);
                 }
                 if (pageRes.ok) {
                     setPageData(await pageRes.json());
@@ -54,9 +56,8 @@ const BlogPage = () => {
         };
 
         fetchData();
-    }, [language, tag]);
+    }, [language, tag, currentPage]);
 
-    // Fetch current tag info if filtering by tag
     useEffect(() => {
         if (tag) {
             fetchTagInfo();
@@ -78,21 +79,13 @@ const BlogPage = () => {
         }
     };
 
-    // Filter blogs based on search (tag filtering is done by backend)
-    useEffect(() => {
-        let result = [...blogs];
-
-        // Filter by search query (client-side)
-        if (search) {
-            const searchLower = search.toLowerCase();
-            result = result.filter(blog =>
-                blog.title?.toLowerCase().includes(searchLower) ||
-                blog.description?.toLowerCase().includes(searchLower)
-            );
-        }
-
-        setFilteredBlogs(result);
-    }, [blogs, search]);
+    // Filter by search (client-side)
+    const filteredBlogs = search
+        ? blogs.filter(blog =>
+            blog.title?.toLowerCase().includes(search.toLowerCase()) ||
+            blog.description?.toLowerCase().includes(search.toLowerCase())
+        )
+        : blogs;
 
     const formatDate = (dateStr) => {
         if (!dateStr) return '';
@@ -112,6 +105,87 @@ const BlogPage = () => {
         if (search) return `Search: "${search}"`;
         if (currentTag) return `Tag: ${currentTag.name}`;
         return pageData?.page_title || 'Blog';
+    };
+
+    const goToPage = (page) => {
+        const query = { page };
+        if (tag) query.tag = tag;
+        if (search) query.search = search;
+        router.push({ pathname: '/blog', query });
+        window.scrollTo(0, 0);
+    };
+
+    const renderPagination = () => {
+        if (!pagination || pagination.total_pages <= 1) return null;
+
+        const pages = [];
+        const { page, total_pages } = pagination;
+
+        // Previous button
+        pages.push(
+            <li key="prev" className={page === 1 ? 'disabled' : ''}>
+                <button
+                    onClick={() => page > 1 && goToPage(page - 1)}
+                    disabled={page === 1}
+                >
+                    <i className="ti-angle-left"></i>
+                </button>
+            </li>
+        );
+
+        // Page numbers
+        let startPage = Math.max(1, page - 2);
+        let endPage = Math.min(total_pages, page + 2);
+
+        if (startPage > 1) {
+            pages.push(
+                <li key={1}>
+                    <button onClick={() => goToPage(1)}>1</button>
+                </li>
+            );
+            if (startPage > 2) {
+                pages.push(<li key="dots1" className="dots"><span>...</span></li>);
+            }
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pages.push(
+                <li key={i} className={i === page ? 'active' : ''}>
+                    <button onClick={() => goToPage(i)}>{i}</button>
+                </li>
+            );
+        }
+
+        if (endPage < total_pages) {
+            if (endPage < total_pages - 1) {
+                pages.push(<li key="dots2" className="dots"><span>...</span></li>);
+            }
+            pages.push(
+                <li key={total_pages}>
+                    <button onClick={() => goToPage(total_pages)}>{total_pages}</button>
+                </li>
+            );
+        }
+
+        // Next button
+        pages.push(
+            <li key="next" className={page === total_pages ? 'disabled' : ''}>
+                <button
+                    onClick={() => page < total_pages && goToPage(page + 1)}
+                    disabled={page === total_pages}
+                >
+                    <i className="ti-angle-right"></i>
+                </button>
+            </li>
+        );
+
+        return (
+            <div className="pagination-wrapper">
+                <ul className="pg-pagination">
+                    {pages}
+                </ul>
+            </div>
+        );
     };
 
     return (
@@ -146,7 +220,7 @@ const BlogPage = () => {
                                 Clear Filters
                             </button>
                             <span style={{ marginLeft: '15px', color: '#666' }}>
-                                {filteredBlogs.length} {filteredBlogs.length === 1 ? 'post' : 'posts'} found
+                                {pagination?.total || 0} {(pagination?.total || 0) === 1 ? 'post' : 'posts'} found
                             </span>
                         </div>
                     )}
@@ -187,11 +261,6 @@ const BlogPage = () => {
                                             <ul className="entry-meta">
                                                 <li>
                                                     <Link onClick={ClickHandler} href={`/blog-single/${blog.slug}`}>
-                                                        {blog.author_name || 'Admin'}
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link onClick={ClickHandler} href={`/blog-single/${blog.slug}`}>
                                                         {formatDate(blog.published_at)}
                                                     </Link>
                                                 </li>
@@ -209,6 +278,7 @@ const BlogPage = () => {
                                     ))
                                 )}
                             </div>
+                            {renderPagination()}
                         </div>
                     </div>
                 </div>

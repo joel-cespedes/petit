@@ -140,24 +140,65 @@ def get_service(slug: str, lang: str = Query("en"), db: Session = Depends(get_db
 
 
 @app.get("/api/blogs")
-def get_blogs(lang: str = Query("en"), tag: str = Query(None), db: Session = Depends(get_db)):
+def get_blogs(
+    lang: str = Query("en"),
+    tag: str = Query(None),
+    page: int = Query(1, ge=1),
+    per_page: int = Query(6, ge=1, le=50),
+    db: Session = Depends(get_db)
+):
     validate_lang(lang)
+    offset = (page - 1) * per_page
 
-    # If tag is provided, filter blogs by tag
+    # Base query parts
     if tag:
+        # Filter by tag
+        count_query = text("""
+            SELECT COUNT(*) FROM blogs b
+            JOIN blog_tags bt ON b.id = bt.blog_id
+            JOIN tags t ON bt.tag_id = t.id
+            WHERE t.slug = :tag AND b.is_published = true
+        """)
+        total = db.execute(count_query, {"tag": tag}).scalar()
+
         query = text(f"""
             SELECT b.id, b.slug, b.title_{lang} as title, b.description_{lang} as description,
-                   b.author_name, b.image_url, b.thumbnail_url, b.published_at, b.is_published
+                   b.image_url, b.thumbnail_url, b.published_at, b.is_published
             FROM blogs b
             JOIN blog_tags bt ON b.id = bt.blog_id
             JOIN tags t ON bt.tag_id = t.id
             WHERE t.slug = :tag AND b.is_published = true
             ORDER BY b.published_at DESC
+            LIMIT :limit OFFSET :offset
         """)
-        result = db.execute(query, {"tag": tag}).fetchall()
-        return [dict(row._mapping) for row in result]
+        result = db.execute(query, {"tag": tag, "limit": per_page, "offset": offset}).fetchall()
+    else:
+        # All blogs
+        count_query = text("SELECT COUNT(*) FROM blogs WHERE is_published = true")
+        total = db.execute(count_query).scalar()
 
-    return get_dynamic_content(db, "blogs", lang, "is_published = true ORDER BY published_at DESC")
+        query = text(f"""
+            SELECT id, slug, title_{lang} as title, description_{lang} as description,
+                   image_url, thumbnail_url, published_at, is_published
+            FROM blogs
+            WHERE is_published = true
+            ORDER BY published_at DESC
+            LIMIT :limit OFFSET :offset
+        """)
+        result = db.execute(query, {"limit": per_page, "offset": offset}).fetchall()
+
+    blogs = [dict(row._mapping) for row in result]
+    total_pages = (total + per_page - 1) // per_page  # Ceiling division
+
+    return {
+        "blogs": blogs,
+        "pagination": {
+            "page": page,
+            "per_page": per_page,
+            "total": total,
+            "total_pages": total_pages
+        }
+    }
 
 
 @app.get("/api/blogs/{slug}")
