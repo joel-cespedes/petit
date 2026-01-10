@@ -15,9 +15,45 @@ export default function EditServices() {
     const [editing, setEditing] = useState(null);
     const [message, setMessage] = useState('');
     const [activeTab, setActiveTab] = useState('en');
+    const [uploading, setUploading] = useState(false);
 
     const languages = ['en', 'es', 'nl'];
     const languageNames = { en: 'English', es: 'Spanish', nl: 'Dutch' };
+
+    const getImageUrl = (path) => {
+        if (!path) return null;
+        if (path.startsWith('http')) return path;
+        return `http://localhost:3000${path}`;
+    };
+
+    const handleImageUpload = async (e, field) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setUploading(true);
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const token = localStorage.getItem('admin_token');
+            const res = await fetch(`${API_URL}/api/admin/upload`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` },
+                body: formData,
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                handleChange(field, data.url);
+            } else {
+                alert('Error uploading image');
+            }
+        } catch (err) {
+            alert('Error uploading image');
+        } finally {
+            setUploading(false);
+        }
+    };
 
     useEffect(() => {
         fetchServices();
@@ -44,6 +80,7 @@ export default function EditServices() {
         setEditing({
             slug: '',
             icon: '',
+            background_image: '',
             title_en: '', title_es: '', title_nl: '',
             description_en: '', description_es: '', description_nl: '',
             section_1_title_en: '', section_1_title_es: '', section_1_title_nl: '',
@@ -128,6 +165,24 @@ export default function EditServices() {
                 <button onClick={() => setEditing(null)} style={styles.backBtn}>
                     ← Back to list
                 </button>
+
+                {/* Background Image Section */}
+                <div style={styles.imageSection}>
+                    <h3 style={styles.sectionTitle}>Background Image (Page Header)</h3>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleImageUpload(e, 'background_image')}
+                        style={styles.fileInput}
+                        disabled={uploading}
+                    />
+                    {uploading && <p>Uploading...</p>}
+                    {editing.background_image && (
+                        <div style={styles.imagePreview}>
+                            <img src={getImageUrl(editing.background_image)} alt="Preview" style={styles.previewImg} />
+                        </div>
+                    )}
+                </div>
 
                 <div style={styles.tabs}>
                     {languages.map((lang) => (
@@ -305,6 +360,28 @@ const styles = {
         borderRadius: '4px',
         cursor: 'pointer',
         marginBottom: '20px',
+    },
+    imageSection: {
+        backgroundColor: '#fff',
+        padding: '20px',
+        borderRadius: '8px',
+        marginBottom: '20px',
+    },
+    fileInput: {
+        padding: '10px',
+        border: '1px solid #ddd',
+        borderRadius: '4px',
+        width: '100%',
+        boxSizing: 'border-box',
+    },
+    imagePreview: {
+        marginTop: '10px',
+    },
+    previewImg: {
+        maxWidth: '300px',
+        maxHeight: '150px',
+        objectFit: 'cover',
+        borderRadius: '4px',
     },
     table: {
         width: '100%',

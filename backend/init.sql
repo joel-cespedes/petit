@@ -123,6 +123,7 @@ CREATE TABLE home_page (
     partner_button_en VARCHAR(100),
     partner_button_es VARCHAR(100),
     partner_button_nl VARCHAR(100),
+    partner_image VARCHAR(500),
 
     -- Contact Section
     contact_phone_message_en TEXT,
@@ -270,6 +271,7 @@ CREATE TABLE services (
     description_es TEXT,
     description_nl TEXT,
     icon VARCHAR(100),
+    background_image VARCHAR(500),
 
     -- Section 1 (title + rich text content)
     section_1_title_en VARCHAR(255),
@@ -517,6 +519,7 @@ CREATE TABLE blogs (
 
     image_url VARCHAR(500),
     thumbnail_url VARCHAR(500),
+    background_image VARCHAR(500),
 
     published_at DATE,
     is_published BOOLEAN DEFAULT TRUE,
@@ -618,20 +621,6 @@ CREATE TABLE global_content (
     address VARCHAR(500),
 
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- =============================================
--- PARTNERS
--- =============================================
-
-CREATE TABLE partners (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100),
-    logo_url VARCHAR(500),
-    website_url VARCHAR(500),
-    is_published BOOLEAN DEFAULT TRUE,
-    sort_order INTEGER DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- =============================================

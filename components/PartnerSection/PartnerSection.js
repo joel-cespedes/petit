@@ -22,27 +22,10 @@ const PartnerSection = ({ data }) => {
                         </div>
                     </div>
                     <div className="col col-lg-6 col-12">
-                        <div className="partner-grids clearfix">
-                            <div className="grid">
-                                <div className="img-holder">
-                                    <img src={data?.partner1_image || '/images/partners/img-1.png'} alt={data?.partner1_image_alt || ''} />
-                                </div>
-                            </div>
-                            <div className="grid">
-                                <div className="img-holder">
-                                    <img src={data?.partner2_image || '/images/partners/img-2.png'} alt={data?.partner2_image_alt || ''} />
-                                </div>
-                            </div>
-                            <div className="grid">
-                                <div className="img-holder">
-                                    <img src={data?.partner3_image || '/images/partners/img-3.png'} alt={data?.partner3_image_alt || ''} />
-                                </div>
-                            </div>
-                            <div className="grid">
-                                <div className="img-holder">
-                                    <img src={data?.partner4_image || '/images/partners/img-4.png'} alt={data?.partner4_image_alt || ''} />
-                                </div>
-                            </div>
+                        <div className="partner-image">
+                            {data?.partner_image && (
+                                <img src={data.partner_image} alt="Partner" style={{width: '100%', height: 'auto', borderRadius: '8px'}} />
+                            )}
                         </div>
                     </div>
                 </div>

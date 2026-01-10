@@ -4,9 +4,21 @@ import BlogSidebar from '../BlogSidebar/BlogSidebar.js'
 
 const BlogSingle = ({ blog, pageContent, blRight, blLeft }) => {
 
-    const submitHandler = (e) => {
-        e.preventDefault()
-    }
+    // Get current URL for sharing
+    const getShareUrl = () => {
+        if (typeof window !== 'undefined') {
+            return encodeURIComponent(window.location.href);
+        }
+        return '';
+    };
+
+    const getShareTitle = () => {
+        return encodeURIComponent(blog?.title || '');
+    };
+
+    const getShareDescription = () => {
+        return encodeURIComponent(blog?.description || '');
+    };
 
     // Format date
     const formatDate = (dateStr) => {
@@ -82,10 +94,46 @@ const BlogSingle = ({ blog, pageContent, blRight, blLeft }) => {
                                 <div className="share">
                                     {pageContent?.share_label || 'Share'}: &nbsp;
                                     <ul>
-                                        <li><Link href="#"><i className="ti-facebook"></i></Link></li>
-                                        <li><Link href="#"><i className="ti-twitter-alt"></i></Link></li>
-                                        <li><Link href="#"><i className="ti-linkedin"></i></Link></li>
-                                        <li><Link href="#"><i className="ti-instagram"></i></Link></li>
+                                        <li>
+                                            <a
+                                                href={`https://www.facebook.com/sharer/sharer.php?u=${getShareUrl()}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                title="Share on Facebook"
+                                            >
+                                                <i className="ti-facebook"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a
+                                                href={`https://twitter.com/intent/tweet?url=${getShareUrl()}&text=${getShareTitle()}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                title="Share on Twitter"
+                                            >
+                                                <i className="ti-twitter-alt"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a
+                                                href={`https://www.linkedin.com/sharing/share-offsite/?url=${getShareUrl()}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                title="Share on LinkedIn"
+                                            >
+                                                <i className="ti-linkedin"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a
+                                                href={`https://api.whatsapp.com/send?text=${getShareTitle()}%20${getShareUrl()}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                title="Share on WhatsApp"
+                                            >
+                                                <i className="ti-mobile"></i>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>

@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const PageTitle = (props) => {
     const sectionStyle = props.backgroundImage
-        ? { backgroundImage: `url(${props.backgroundImage})` }
+        ? { '--page-bg': `url(${props.backgroundImage})` }
         : {};
 
     return (

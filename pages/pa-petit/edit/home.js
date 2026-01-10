@@ -163,9 +163,23 @@ export default function EditHome() {
                         />
                         {uploading.testimonial_quote_icon && <span>Uploading...</span>}
                     </div>
+                    <div style={styles.imageUpload}>
+                        <label style={styles.label}>Partner Section Image</label>
+                        {data?.partner_image && (
+                            <img src={getImageUrl(data.partner_image)} alt="Partner" style={styles.imagePreview} />
+                        )}
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => handleImageUpload('partner_image', e.target.files[0])}
+                            style={styles.fileInput}
+                            disabled={uploading.partner_image}
+                        />
+                        {uploading.partner_image && <span>Uploading...</span>}
+                    </div>
                 </div>
                 <p style={{marginTop: '15px', color: '#666', fontSize: '14px'}}>
-                    Logo and Partners are edited in their respective sections: Global Settings and Partners.
+                    Logo is edited in Global Settings.
                 </p>
             </div>
 

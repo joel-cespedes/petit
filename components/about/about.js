@@ -11,9 +11,9 @@ const About = ({ data }) => {
                     <div className="col col-lg-6 order-lg-1 order-2 col-12">
                         <div className="img-holder">
                             <Image src={data?.about_image || abimg} alt="" width={450} height={450} />
-                            <div className="experience-text">
+                            {/* <div className="experience-text">
                                 {data?.about_experience_years || ''} {data?.about_experience_text || ''} <span>{data?.about_experience_highlight || ''}</span>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                     <div className="col col-lg-6 order-lg-2 order-1 col-12">

@@ -43,6 +43,46 @@ def clean_update_data(data: dict) -> dict:
     return data
 
 
+# Image fields that should be cleaned up when replaced
+IMAGE_FIELDS = ['image_url', 'thumbnail_url', 'background_image', 'profile_image', 'hero_image', 'logo_url', 'logo_white']
+
+
+def delete_old_image(old_url: str):
+    """Delete an image file from uploads folder if it exists"""
+    if not old_url:
+        return
+    # Only delete files from /uploads (not /images which are static assets)
+    if not old_url.startswith('/uploads/'):
+        return
+    try:
+        # Convert URL path to filesystem path
+        filename = old_url.replace('/uploads/', '')
+        file_path = os.path.join(UPLOAD_DIR, filename)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            print(f"Deleted old image: {file_path}")
+    except Exception as e:
+        print(f"Error deleting image: {e}")
+
+
+def cleanup_replaced_images(db, table: str, record_id: int, new_data: dict):
+    """Compare old and new data, delete replaced images"""
+    # Get current record to compare
+    query = text(f"SELECT * FROM {table} WHERE id = :id")
+    result = db.execute(query, {"id": record_id}).fetchone()
+    if not result:
+        return
+
+    old_data = dict(result._mapping)
+
+    for field in IMAGE_FIELDS:
+        old_value = old_data.get(field)
+        new_value = new_data.get(field)
+        # If field exists in new data and has changed, delete old image
+        if field in new_data and old_value and old_value != new_value:
+            delete_old_image(old_value)
+
+
 # =============================================
 # AUTH ENDPOINTS
 # =============================================
@@ -228,13 +268,6 @@ def get_tags(lang: str = Query("en"), db: Session = Depends(get_db)):
     return get_dynamic_content(db, "tags", lang)
 
 
-@app.get("/api/partners")
-def get_partners(db: Session = Depends(get_db)):
-    query = text("SELECT * FROM partners WHERE is_published = true ORDER BY sort_order")
-    result = db.execute(query).fetchall()
-    return [dict(row._mapping) for row in result]
-
-
 # =============================================
 # PUBLIC ENDPOINTS - FORM SUBMISSIONS
 # =============================================
@@ -291,6 +324,7 @@ def admin_update_home(
     if not data:
         raise HTTPException(status_code=400, detail="No data provided")
 
+    cleanup_replaced_images(db, "home_page", 1, data)
     clean_update_data(data)
     set_clauses = ", ".join([f"{key} = :{key}" for key in data.keys()])
     query = text(f"UPDATE home_page SET {set_clauses}, updated_at = NOW() WHERE id = 1")
@@ -312,6 +346,7 @@ def admin_update_global(
 ):
     if not data:
         raise HTTPException(status_code=400, detail="No data provided")
+    cleanup_replaced_images(db, "global_content", 1, data)
     clean_update_data(data)
     set_clauses = ", ".join([f"{key} = :{key}" for key in data.keys()])
     query = text(f"UPDATE global_content SET {set_clauses}, updated_at = NOW() WHERE id = 1")
@@ -333,6 +368,7 @@ def admin_update_services_page(
 ):
     if not data:
         raise HTTPException(status_code=400, detail="No data provided")
+    cleanup_replaced_images(db, "services_page", 1, data)
     clean_update_data(data)
     set_clauses = ", ".join([f"{key} = :{key}" for key in data.keys()])
     query = text(f"UPDATE services_page SET {set_clauses}, updated_at = NOW() WHERE id = 1")
@@ -354,6 +390,7 @@ def admin_update_service_single_page(
 ):
     if not data:
         raise HTTPException(status_code=400, detail="No data provided")
+    cleanup_replaced_images(db, "service_single_page", 1, data)
     clean_update_data(data)
     set_clauses = ", ".join([f"{key} = :{key}" for key in data.keys()])
     query = text(f"UPDATE service_single_page SET {set_clauses}, updated_at = NOW() WHERE id = 1")
@@ -380,6 +417,7 @@ def admin_update_about_page(
 ):
     if not data:
         raise HTTPException(status_code=400, detail="No data provided")
+    cleanup_replaced_images(db, "about_page", 1, data)
     clean_update_data(data)
     set_clauses = ", ".join([f"{key} = :{key}" for key in data.keys()])
     query = text(f"UPDATE about_page SET {set_clauses}, updated_at = NOW() WHERE id = 1")
@@ -396,6 +434,7 @@ def admin_update_blog_page(
 ):
     if not data:
         raise HTTPException(status_code=400, detail="No data provided")
+    cleanup_replaced_images(db, "blog_page", 1, data)
     clean_update_data(data)
     set_clauses = ", ".join([f"{key} = :{key}" for key in data.keys()])
     query = text(f"UPDATE blog_page SET {set_clauses}, updated_at = NOW() WHERE id = 1")
@@ -417,6 +456,7 @@ def admin_update_blog_single_page(
 ):
     if not data:
         raise HTTPException(status_code=400, detail="No data provided")
+    cleanup_replaced_images(db, "blog_single_page", 1, data)
     clean_update_data(data)
     set_clauses = ", ".join([f"{key} = :{key}" for key in data.keys()])
     query = text(f"UPDATE blog_single_page SET {set_clauses}, updated_at = NOW() WHERE id = 1")
@@ -470,6 +510,7 @@ def admin_update_service(
     db: Session = Depends(get_db)
 ):
     """Update service"""
+    cleanup_replaced_images(db, "services", id, data)
     clean_update_data(data)
     set_clauses = ", ".join([f"{key} = :{key}" for key in data.keys()])
     query = text(f"UPDATE services SET {set_clauses}, updated_at = NOW() WHERE id = :id")
@@ -482,6 +523,14 @@ def admin_update_service(
 @app.delete("/api/admin/services/{id}")
 def admin_delete_service(id: int, username: str = Depends(verify_token), db: Session = Depends(get_db)):
     """Delete service"""
+    # Get record to delete its images
+    record = db.execute(text("SELECT * FROM services WHERE id = :id"), {"id": id}).fetchone()
+    if record:
+        data = dict(record._mapping)
+        for field in IMAGE_FIELDS:
+            if field in data and data[field]:
+                delete_old_image(data[field])
+
     query = text("DELETE FROM services WHERE id = :id")
     db.execute(query, {"id": id})
     db.commit()
@@ -505,7 +554,15 @@ def admin_get_blog(id: int, username: str = Depends(verify_token), db: Session =
     result = db.execute(query, {"id": id}).fetchone()
     if not result:
         raise HTTPException(status_code=404, detail="Blog not found")
-    return dict(result._mapping)
+
+    blog = dict(result._mapping)
+
+    # Get tag_ids for this blog
+    tags_query = text("SELECT tag_id FROM blog_tags WHERE blog_id = :blog_id")
+    tags_result = db.execute(tags_query, {"blog_id": id}).fetchall()
+    blog["tag_ids"] = [row[0] for row in tags_result]
+
+    return blog
 
 
 @app.post("/api/admin/blogs")
@@ -543,6 +600,9 @@ def admin_update_blog(
     username: str = Depends(verify_token),
     db: Session = Depends(get_db)
 ):
+    # Cleanup old images if they're being replaced
+    cleanup_replaced_images(db, "blogs", id, data)
+
     # Extract tag_ids (handled separately via blog_tags table)
     tag_ids = data.pop("tag_ids", None)
     # Remove fields that are not columns or auto-managed
@@ -572,55 +632,15 @@ def admin_update_blog(
 
 @app.delete("/api/admin/blogs/{id}")
 def admin_delete_blog(id: int, username: str = Depends(verify_token), db: Session = Depends(get_db)):
+    # Get record to delete its images
+    record = db.execute(text("SELECT * FROM blogs WHERE id = :id"), {"id": id}).fetchone()
+    if record:
+        data = dict(record._mapping)
+        for field in IMAGE_FIELDS:
+            if field in data and data[field]:
+                delete_old_image(data[field])
+
     query = text("DELETE FROM blogs WHERE id = :id")
-    db.execute(query, {"id": id})
-    db.commit()
-    return {"success": True}
-
-
-# =============================================
-# ADMIN ENDPOINTS - PARTNERS CRUD (Protected)
-# =============================================
-
-@app.get("/api/admin/partners")
-def admin_get_partners(username: str = Depends(verify_token), db: Session = Depends(get_db)):
-    query = text("SELECT * FROM partners ORDER BY sort_order")
-    result = db.execute(query).fetchall()
-    return [dict(row._mapping) for row in result]
-
-
-@app.post("/api/admin/partners")
-def admin_create_partner(
-    data: dict = Body(...),
-    username: str = Depends(verify_token),
-    db: Session = Depends(get_db)
-):
-    columns = ", ".join(data.keys())
-    values = ", ".join([f":{key}" for key in data.keys()])
-    query = text(f"INSERT INTO partners ({columns}) VALUES ({values}) RETURNING id")
-    result = db.execute(query, data)
-    db.commit()
-    return {"success": True, "id": result.fetchone()[0]}
-
-
-@app.put("/api/admin/partners/{id}")
-def admin_update_partner(
-    id: int,
-    data: dict = Body(...),
-    username: str = Depends(verify_token),
-    db: Session = Depends(get_db)
-):
-    set_clauses = ", ".join([f"{key} = :{key}" for key in data.keys()])
-    query = text(f"UPDATE partners SET {set_clauses} WHERE id = :id")
-    data["id"] = id
-    db.execute(query, data)
-    db.commit()
-    return {"success": True}
-
-
-@app.delete("/api/admin/partners/{id}")
-def admin_delete_partner(id: int, username: str = Depends(verify_token), db: Session = Depends(get_db)):
-    query = text("DELETE FROM partners WHERE id = :id")
     db.execute(query, {"id": id})
     db.commit()
     return {"success": True}

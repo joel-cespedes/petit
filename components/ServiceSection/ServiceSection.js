@@ -5,6 +5,12 @@ const ClickHandler = () => {
     window.scrollTo(10, 0);
 }
 
+// Strip HTML tags from text
+const stripHtml = (html) => {
+    if (!html) return '';
+    return html.replace(/<[^>]*>/g, '');
+}
+
 const ServiceSection = ({ data, services = [] }) => {
     // Support both home_content fields (services_*) and services_page fields (section_*)
     const tag = data?.services_tag || data?.section_tag || '';
@@ -32,7 +38,7 @@ const ServiceSection = ({ data, services = [] }) => {
                                         <i className={`fi ${service.icon || 'flaticon-sheriff'}`}></i>
                                     </div>
                                     <h3><Link onClick={ClickHandler} href={"/service-single/[slug]"} as={`/service-single/${service.slug}`}>{service.title}</Link></h3>
-                                    <p>{service.description}</p>
+                                    <p>{stripHtml(service.description)}</p>
                                 </div>
                             ))}
                         </div>

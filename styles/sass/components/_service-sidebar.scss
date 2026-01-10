@@ -68,7 +68,7 @@
 
 	/*** contact-widget ***/
 	.contact-widget {
-		@include background-style("/images/service-single-contact-widget-bg.jpg", center center, cover, no-repeat, local);
+		//@include background-style("/images/service-single-contact-widget-bg.jpg", center center, cover, no-repeat, local);
 		padding: 45px 30px;
 		position: relative;
 

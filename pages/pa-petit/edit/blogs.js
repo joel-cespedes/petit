@@ -69,6 +69,7 @@ export default function EditBlogs() {
             slug: '',
             image_url: '',
             thumbnail_url: '',
+            background_image: '',
             published_at: new Date().toISOString().split('T')[0],
             is_published: true,
             tag_ids: [],
@@ -78,12 +79,36 @@ export default function EditBlogs() {
         });
     };
 
-    const handleEdit = (blog) => {
-        setEditing({
-            ...blog,
-            tag_ids: blog.tag_ids || [],
-            published_at: blog.published_at ? blog.published_at.split('T')[0] : ''
-        });
+    const handleEdit = async (blog) => {
+        // Fetch full blog data including tag_ids
+        try {
+            const token = localStorage.getItem('admin_token');
+            const res = await fetch(`${API_URL}/api/admin/blogs/${blog.id}`, {
+                headers: { 'Authorization': `Bearer ${token}` },
+            });
+            if (res.ok) {
+                const fullBlog = await res.json();
+                setEditing({
+                    ...fullBlog,
+                    tag_ids: fullBlog.tag_ids || [],
+                    published_at: fullBlog.published_at ? fullBlog.published_at.split('T')[0] : ''
+                });
+            } else {
+                // Fallback to list data if fetch fails
+                setEditing({
+                    ...blog,
+                    tag_ids: blog.tag_ids || [],
+                    published_at: blog.published_at ? blog.published_at.split('T')[0] : ''
+                });
+            }
+        } catch (err) {
+            console.error('Error fetching blog details:', err);
+            setEditing({
+                ...blog,
+                tag_ids: blog.tag_ids || [],
+                published_at: blog.published_at ? blog.published_at.split('T')[0] : ''
+            });
+        }
     };
 
     const handleChange = (field, value) => {
@@ -227,6 +252,21 @@ export default function EditBlogs() {
                             {editing.thumbnail_url && (
                                 <div style={styles.imagePreview}>
                                     <img src={getImageUrl(editing.thumbnail_url)} alt="Preview" style={styles.previewImg} />
+                                </div>
+                            )}
+                        </div>
+                        <div style={styles.imageGroup}>
+                            <label style={styles.label}>Background Image (Page Header)</label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => handleImageUpload(e, 'background_image')}
+                                style={styles.fileInput}
+                                disabled={uploading}
+                            />
+                            {editing.background_image && (
+                                <div style={styles.imagePreview}>
+                                    <img src={getImageUrl(editing.background_image)} alt="Preview" style={styles.previewImg} />
                                 </div>
                             )}
                         </div>
@@ -458,7 +498,7 @@ const styles = {
     },
     imageRow: {
         display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
+        gridTemplateColumns: '1fr 1fr 1fr',
         gap: '20px',
     },
     imageGroup: {

@@ -22,6 +22,7 @@ const ServiceSinglePage = () => {
     const [service, setService] = useState(null);
     const [allServices, setAllServices] = useState([]);
     const [pageData, setPageData] = useState(null);
+    const [globalContent, setGlobalContent] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -30,10 +31,11 @@ const ServiceSinglePage = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const [serviceRes, allServicesRes, pageRes] = await Promise.all([
+                const [serviceRes, allServicesRes, pageRes, globalRes] = await Promise.all([
                     fetch(`${API_URL}/api/services/${slug}?lang=${language}`),
                     fetch(`${API_URL}/api/services?lang=${language}`),
-                    fetch(`${API_URL}/api/service-single-page?lang=${language}`)
+                    fetch(`${API_URL}/api/service-single-page?lang=${language}`),
+                    fetch(`${API_URL}/api/global?lang=${language}`)
                 ]);
 
                 if (serviceRes.ok) {
@@ -44,6 +46,9 @@ const ServiceSinglePage = () => {
                 }
                 if (pageRes.ok) {
                     setPageData(await pageRes.json());
+                }
+                if (globalRes.ok) {
+                    setGlobalContent(await globalRes.json());
                 }
             } catch (err) {
                 console.error('Error fetching service:', err);
@@ -89,7 +94,7 @@ const ServiceSinglePage = () => {
     return (
         <Fragment>
             <Navbar hclass={'header-style-3'} Logo={Logo} />
-            <PageTitle pageTitle={service.title} pagesub={pageData?.page_breadcrumb || 'Service'} backgroundImage={pageData?.background_image} />
+            <PageTitle pageTitle={service.title} pagesub={pageData?.page_breadcrumb || 'Service'} backgroundImage={service.background_image || pageData?.background_image} />
 
             <section className="service-single-section section-padding">
                 <div className="container">
@@ -158,9 +163,9 @@ const ServiceSinglePage = () => {
                                             <h4>{pageData.sidebar_help_title}</h4>
                                             {pageData.sidebar_help_text && <p>{pageData.sidebar_help_text}</p>}
                                             {pageData.sidebar_help_phone && <p>Phone: {pageData.sidebar_help_phone}</p>}
-                                            <Link onClick={ClickHandler} href='/contact'>
+                                            <a href={`mailto:${globalContent?.email || ''}`}>
                                                 {pageData.sidebar_contact_link || 'Contact Us'}
-                                            </Link>
+                                            </a>
                                         </div>
                                     </div>
                                 )}

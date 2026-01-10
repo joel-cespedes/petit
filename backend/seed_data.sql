@@ -1,3 +1,7 @@
+-- Insert initial rows for all tables
+INSERT INTO home_page (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
+INSERT INTO global_content (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
+
 -- Seed data for home_page (UPDATE existing row)
 UPDATE home_page SET
     -- Hero Section
@@ -113,6 +117,7 @@ UPDATE home_page SET
     partner_button_en = 'Get In Touch',
     partner_button_es = 'Contáctanos',
     partner_button_nl = 'Neem Contact Op',
+    partner_image = '/images/about/about-2.jpg',
 
     -- Contact Section
     contact_phone_message_en = 'Don''t hesitate to contact with us. phone: 01245643654',
@@ -267,6 +272,9 @@ UPDATE about_page SET
     achievements_content_nl = '<ul><li>- Beste Bedrijfsadviseur Award 2020</li><li>- Succesvol geleid 100+ adviesprojecten</li><li>- Uitgelichte spreker op internationale zakelijke conferenties</li><li>- Auteur van bestseller boek "Strategische Groei"</li></ul>'
 WHERE id = 1;
 
+-- Insert service_single_page initial row
+INSERT INTO service_single_page (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
+
 -- Update service_single_page
 UPDATE service_single_page SET
     page_breadcrumb_en = 'Service Details',
@@ -326,6 +334,9 @@ UPDATE service_single_page SET
     form_submit_button_nl = 'Verstuur Aanvraag'
 WHERE id = 1;
 
+-- Insert blog_single_page initial row
+INSERT INTO blog_single_page (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
+
 -- Update blog_single_page
 UPDATE blog_single_page SET
     page_breadcrumb_en = 'Blog',
@@ -377,6 +388,9 @@ UPDATE blog_single_page SET
     nav_next_nl = 'Volgend Bericht'
 WHERE id = 1;
 
+-- Insert services_page initial row
+INSERT INTO services_page (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
+
 -- Update services_page
 UPDATE services_page SET
     page_title_en = 'Our Services',
@@ -396,6 +410,9 @@ UPDATE services_page SET
     section_description_es = 'Mostraba a una dama equipada con un sombrero de piel y una boa de piel que estaba sentada erguida, levantando un pesado manguito de piel que cubría todo su antebrazo hacia el espectador.',
     section_description_nl = 'Toonde een dame uitgerust met een bontmuts en bontboa die rechtop zat, een zware bontmof opheffend die haar hele onderarm bedekte naar de kijker.'
 WHERE id = 1;
+
+-- Insert blog_page initial row
+INSERT INTO blog_page (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
 
 -- Update blog_page
 UPDATE blog_page SET
@@ -439,6 +456,7 @@ WHERE id = 1;
 
 -- Update existing services with full content
 UPDATE services SET
+    background_image = '/images/page-title.jpg',
     description_en = 'Samsa was a travelling salesman and above it there hung a picture that he had recently cut out of an illustrated magazine and.',
     description_es = 'Samsa era un viajante de comercio y encima colgaba una imagen que había recortado recientemente de una revista ilustrada.',
     description_nl = 'Samsa was een handelsreiziger en daarboven hing een foto die hij onlangs uit een tijdschrift had geknipt.',
@@ -463,6 +481,7 @@ UPDATE services SET
 WHERE slug = 'market-research';
 
 UPDATE services SET
+    background_image = '/images/page-title.jpg',
     description_en = 'Samsa was a travelling salesman and above it there hung a picture that he had recently cut out of an illustrated magazine and.',
     description_es = 'Samsa era un viajante de comercio y encima colgaba una imagen que había recortado recientemente de una revista ilustrada.',
     description_nl = 'Samsa was een handelsreiziger en daarboven hing een foto die hij onlangs uit een tijdschrift had geknipt.',
@@ -487,6 +506,7 @@ UPDATE services SET
 WHERE slug = 'corporate-finance';
 
 UPDATE services SET
+    background_image = '/images/page-title.jpg',
     description_en = 'Samsa was a travelling salesman and above it there hung a picture that he had recently cut out of an illustrated magazine and.',
     description_es = 'Samsa era un viajante de comercio y encima colgaba una imagen que había recortado recientemente de una revista ilustrada.',
     description_nl = 'Samsa was een handelsreiziger en daarboven hing een foto die hij onlangs uit een tijdschrift had geknipt.',

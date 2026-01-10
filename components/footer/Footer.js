@@ -61,8 +61,8 @@ const Footer = (props) => {
                                     <h3>{globalContent?.footer_contact_title || 'Contact Info'}</h3>
                                 </div>
                                 <ul>
-                                    {globalContent?.phone && <li>Phone: {globalContent.phone}</li>}
-                                    {globalContent?.email && <li>Email: {globalContent.email}</li>}
+                                    {globalContent?.phone && <li>Phone: <a href={`tel:${globalContent.phone.replace(/\s/g, '')}`} style={{color: 'inherit', textDecoration: 'none'}}>{globalContent.phone}</a></li>}
+                                    {globalContent?.email && <li>Email: <a href={`mailto:${globalContent.email}`} style={{color: 'inherit', textDecoration: 'none'}}>{globalContent.email}</a></li>}
                                     {globalContent?.address && <li>Address: {globalContent.address}</li>}
                                 </ul>
                             </div>
@@ -75,7 +75,7 @@ const Footer = (props) => {
                     <div className="row">
                         <div className="separator"></div>
                         <div className="col col-xs-12">
-                            <p className="copyright">{globalContent?.copyright_text || 'Copyright © 2024 Jhair. All rights reserved.'}</p>
+                            <p className="copyright">{globalContent?.footer_copyright || 'Copyright © 2024 Jhair. All rights reserved.'}</p>
                             <div className="social-icons">
                                 <ul>
                                     {globalContent?.social_facebook && (

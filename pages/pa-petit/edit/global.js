@@ -109,10 +109,10 @@ export default function EditGlobal() {
     }
 
     const translatedFields = [
-        { name: 'site_name', label: 'Site Name', type: 'text' },
-        { name: 'site_description', label: 'Site Description', type: 'textarea' },
-        { name: 'footer_text', label: 'Footer Text', type: 'textarea' },
-        { name: 'copyright_text', label: 'Copyright Text', type: 'text' },
+        { name: 'footer_about_text', label: 'Footer About Text', type: 'textarea' },
+        { name: 'footer_nav_title', label: 'Footer Navigation Title', type: 'text' },
+        { name: 'footer_contact_title', label: 'Footer Contact Title', type: 'text' },
+        { name: 'footer_copyright', label: 'Copyright Text', type: 'text' },
     ];
 
     return (
@@ -246,8 +246,8 @@ export default function EditGlobal() {
                             <label style={styles.label}>Facebook URL</label>
                             <input
                                 type="url"
-                                value={data?.facebook_url || ''}
-                                onChange={(e) => handleChange('facebook_url', e.target.value)}
+                                value={data?.social_facebook || ''}
+                                onChange={(e) => handleChange('social_facebook', e.target.value)}
                                 style={styles.input}
                             />
                         </div>
@@ -255,8 +255,8 @@ export default function EditGlobal() {
                             <label style={styles.label}>Twitter URL</label>
                             <input
                                 type="url"
-                                value={data?.twitter_url || ''}
-                                onChange={(e) => handleChange('twitter_url', e.target.value)}
+                                value={data?.social_twitter || ''}
+                                onChange={(e) => handleChange('social_twitter', e.target.value)}
                                 style={styles.input}
                             />
                         </div>
@@ -264,8 +264,8 @@ export default function EditGlobal() {
                             <label style={styles.label}>Instagram URL</label>
                             <input
                                 type="url"
-                                value={data?.instagram_url || ''}
-                                onChange={(e) => handleChange('instagram_url', e.target.value)}
+                                value={data?.social_instagram || ''}
+                                onChange={(e) => handleChange('social_instagram', e.target.value)}
                                 style={styles.input}
                             />
                         </div>
@@ -273,8 +273,17 @@ export default function EditGlobal() {
                             <label style={styles.label}>LinkedIn URL</label>
                             <input
                                 type="url"
-                                value={data?.linkedin_url || ''}
-                                onChange={(e) => handleChange('linkedin_url', e.target.value)}
+                                value={data?.social_linkedin || ''}
+                                onChange={(e) => handleChange('social_linkedin', e.target.value)}
+                                style={styles.input}
+                            />
+                        </div>
+                        <div style={styles.formGroup}>
+                            <label style={styles.label}>Pinterest URL</label>
+                            <input
+                                type="url"
+                                value={data?.social_pinterest || ''}
+                                onChange={(e) => handleChange('social_pinterest', e.target.value)}
                                 style={styles.input}
                             />
                         </div>

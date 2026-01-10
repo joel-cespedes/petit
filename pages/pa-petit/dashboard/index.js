@@ -56,8 +56,7 @@ export default function Dashboard() {
         { title: 'Blog Page', href: '/pa-petit/edit/blog-page', icon: '📰' },
         { title: 'Blogs (Items)', href: '/pa-petit/edit/blogs', icon: '✏️' },
         { title: 'Tags', href: '/pa-petit/edit/tags', icon: '🏷️' },
-        { title: 'Global Content', href: '/pa-petit/edit/global', icon: '🌐' },
-        { title: 'Partners', href: '/pa-petit/edit/partners', icon: '🤝' },
+        { title: 'Global Content', href: '/pa-petit/edit/global', icon: '🌐' }
     ];
 
     return (
@@ -68,7 +67,7 @@ export default function Dashboard() {
             <div style={styles.container}>
                 <nav style={styles.sidebar}>
                     <div style={styles.logo}>
-                        <h2>Admin Panel</h2>
+                        <h3 style={{ color: '#fff' }}>Admin Panel</h3>
                     </div>
                     <ul style={styles.menu}>
                         {menuItems.map((item) => (
