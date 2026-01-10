@@ -50,7 +50,14 @@ const Header = (props) => {
                     <div className="navbar-header">
                         <MobileMenu />
                         <Link onClick={ClickHandler} className="navbar-brand" href="/home">
-                            <img src={globalContent?.logo_url || '/images/logo.png'} alt="Logo" style={{height: '50px', width: 'auto'}} />
+                            <img
+                                src={props.hclass === 'header-style-1'
+                                    ? (globalContent?.logo_url || '/images/logo.png')
+                                    : (globalContent?.logo_white || '/images/logo-2.png')
+                                }
+                                alt="Logo"
+                                style={{height: '50px', width: 'auto'}}
+                            />
                         </Link>
                     </div>
                     <div id="navbar" className="collapse navbar-collapse navigation-holder">

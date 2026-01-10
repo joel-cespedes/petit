@@ -607,6 +607,7 @@ CREATE TABLE global_content (
 
     -- Logo
     logo_url VARCHAR(500),
+    logo_white VARCHAR(500),
 
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

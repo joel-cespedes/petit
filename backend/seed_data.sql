@@ -195,7 +195,8 @@ UPDATE global_content SET
     social_instagram = 'https://instagram.com',
     social_pinterest = 'https://pinterest.com',
 
-    logo_url = '/images/logo.png'
+    logo_url = '/images/logo.png',
+    logo_white = '/images/logo-2.png'
 WHERE id = 1;
 
 -- Insert about_page initial row

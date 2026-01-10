@@ -1,17 +1,31 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from "next/link";
-import Logo from '/public/images/logo.png'
-import Image from 'next/image';
+import { useLanguage } from '../../context/LanguageContext';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 const ClickHandler = () => {
     window.scrollTo(10, 0);
 }
-const SubmitHandler = (e) => {
-    e.preventDefault()
-}
 
 const Footer = (props) => {
+    const { language } = useLanguage();
+    const [globalContent, setGlobalContent] = useState(null);
+
+    useEffect(() => {
+        const fetchGlobalContent = async () => {
+            try {
+                const res = await fetch(`${API_URL}/api/global?lang=${language}`);
+                if (res.ok) {
+                    setGlobalContent(await res.json());
+                }
+            } catch (err) {
+                console.error('Error fetching global content:', err);
+            }
+        };
+        fetchGlobalContent();
+    }, [language]);
+
     return (
         <footer className="site-footer">
             <div className="upper-footer">
@@ -20,58 +34,39 @@ const Footer = (props) => {
                         <div className="col col-lg-4 col-md-6 col-12">
                             <div className="widget about-widget">
                                 <div className="logo widget-title">
-                                    <Image src={Logo} alt="" />
+                                    <img
+                                        src={globalContent?.logo_white || '/images/logo-2.png'}
+                                        alt="Logo"
+                                        style={{maxHeight: '50px', width: 'auto'}}
+                                    />
                                 </div>
-                                <p>Samsa was a travelling salesman  and above it there hung a picture that he had recently cut out of an illustrated magazine and housed</p>
+                                <p>{globalContent?.footer_about_text || 'Samsa was a travelling salesman and above it there hung a picture that he had recently cut out of an illustrated magazine and housed'}</p>
                             </div>
                         </div>
                         <div className="col col-lg-4 col-md-6 col-12">
                             <div className="widget link-widget">
                                 <div className="widget-title">
-                                    <h3>Navigation</h3>
+                                    <h3>{globalContent?.footer_nav_title || 'Navigation'}</h3>
                                 </div>
                                 <ul>
-                                    <li><Link onClick={ClickHandler} href="/about">About us</Link></li>
-                                    <li><Link onClick={ClickHandler} href="/contact">Contact us</Link></li>
-                                    <li><Link onClick={ClickHandler} href="/services">Case Studies</Link></li>
-                                    <li><Link onClick={ClickHandler} href="/services">Our Services</Link></li>
+                                    <li><Link onClick={ClickHandler} href="/about">{globalContent?.nav_about || 'About us'}</Link></li>
+                                    <li><Link onClick={ClickHandler} href="/services">{globalContent?.nav_services || 'Services'}</Link></li>
+                                    <li><Link onClick={ClickHandler} href="/blog">{globalContent?.nav_blog || 'Blog'}</Link></li>
                                 </ul>
-                                {/* <ul>
-                                    <li><Link onClick={ClickHandler} href="/contact">Provacu Policy</Link></li>
-                                    <li><Link onClick={ClickHandler} href="/contact">Contact</Link></li>
-                                    <li><Link onClick={ClickHandler} href="/testimonials">Testimonials</Link></li>
-                                    <li><Link onClick={ClickHandler} href="/blog">News</Link></li>
-                                </ul> */}
                             </div>
                         </div>
                         <div className="col col-lg-4 col-md-6 col-12">
                             <div className="widget contact-widget service-link-widget">
                                 <div className="widget-title">
-                                    <h3>Contact Info</h3>
+                                    <h3>{globalContent?.footer_contact_title || 'Contact Info'}</h3>
                                 </div>
                                 <ul>
-                                    <li>Phone: ++87655285654 </li>
-                                    <li>Email: jhair@demo.com</li>
-                                    <li>Office Time: 10AM- 5PM</li>
+                                    {globalContent?.phone && <li>Phone: {globalContent.phone}</li>}
+                                    {globalContent?.email && <li>Email: {globalContent.email}</li>}
+                                    {globalContent?.address && <li>Address: {globalContent.address}</li>}
                                 </ul>
                             </div>
                         </div>
-                        {/* <div className="col col-lg-3 col-md-6 col-12">
-                            <div className="widget newsletter-widget">
-                                <div className="widget-title">
-                                    <h3>Newsletter</h3>
-                                </div>
-                                <p>You will be notified when somthing new will be appear.</p>
-                                <form onSubmit={SubmitHandler}>
-                                    <div className="input-1">
-                                        <input type="email" className="form-control" placeholder="Email Address *" required/>
-                                    </div>
-                                    <div className="submit clearfix">
-                                        <button type="submit"><i className="ti-email"></i></button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div> */}
                     </div>
                 </div>
             </div>
@@ -80,14 +75,24 @@ const Footer = (props) => {
                     <div className="row">
                         <div className="separator"></div>
                         <div className="col col-xs-12">
-                            <p className="copyright">Copyright &copy; 2023 Jhair. All rights reserved.</p>
+                            <p className="copyright">{globalContent?.copyright_text || 'Copyright © 2024 Jhair. All rights reserved.'}</p>
                             <div className="social-icons">
                                 <ul>
-                                    <li><Link onClick={ClickHandler} href="/"><i className="ti-facebook"></i></Link></li>
-                                    <li><Link onClick={ClickHandler} href="/"><i className="ti-twitter-alt"></i></Link></li>
-                                    <li><Link onClick={ClickHandler} href="/"><i className="ti-linkedin"></i></Link></li>
-                                    <li><Link onClick={ClickHandler} href="/"><i className="ti-pinterest"></i></Link></li>
-                                    <li><Link onClick={ClickHandler} href="/"><i className="ti-vimeo-alt"></i></Link></li>
+                                    {globalContent?.social_facebook && (
+                                        <li><Link href={globalContent.social_facebook} target="_blank"><i className="ti-facebook"></i></Link></li>
+                                    )}
+                                    {globalContent?.social_twitter && (
+                                        <li><Link href={globalContent.social_twitter} target="_blank"><i className="ti-twitter-alt"></i></Link></li>
+                                    )}
+                                    {globalContent?.social_linkedin && (
+                                        <li><Link href={globalContent.social_linkedin} target="_blank"><i className="ti-linkedin"></i></Link></li>
+                                    )}
+                                    {globalContent?.social_instagram && (
+                                        <li><Link href={globalContent.social_instagram} target="_blank"><i className="ti-instagram"></i></Link></li>
+                                    )}
+                                    {globalContent?.social_pinterest && (
+                                        <li><Link href={globalContent.social_pinterest} target="_blank"><i className="ti-pinterest"></i></Link></li>
+                                    )}
                                 </ul>
                             </div>
                         </div>

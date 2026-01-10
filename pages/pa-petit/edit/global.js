@@ -145,20 +145,36 @@ export default function EditGlobal() {
 
             {/* Logo Section */}
             <div style={styles.section}>
-                <h3 style={styles.sectionTitle}>Site Logo</h3>
-                <div style={styles.imageUpload}>
-                    <label style={styles.label}>Logo Image</label>
-                    {data?.logo_url && (
-                        <img src={getImageUrl(data.logo_url)} alt="Logo" style={styles.imagePreview} />
-                    )}
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleImageUpload('logo_url', e.target.files[0])}
-                        style={styles.fileInput}
-                        disabled={uploading.logo_url}
-                    />
-                    {uploading.logo_url && <span>Uploading...</span>}
+                <h3 style={styles.sectionTitle}>Site Logos</h3>
+                <div style={styles.logoGrid}>
+                    <div style={styles.imageUpload}>
+                        <label style={styles.label}>Logo Dark (for light backgrounds)</label>
+                        {data?.logo_url && (
+                            <img src={getImageUrl(data.logo_url)} alt="Logo Dark" style={styles.imagePreview} />
+                        )}
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => handleImageUpload('logo_url', e.target.files[0])}
+                            style={styles.fileInput}
+                            disabled={uploading.logo_url}
+                        />
+                        {uploading.logo_url && <span>Uploading...</span>}
+                    </div>
+                    <div style={{...styles.imageUpload, backgroundColor: '#333'}}>
+                        <label style={{...styles.label, color: '#fff'}}>Logo White (for dark backgrounds)</label>
+                        {data?.logo_white && (
+                            <img src={getImageUrl(data.logo_white)} alt="Logo White" style={styles.imagePreview} />
+                        )}
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => handleImageUpload('logo_white', e.target.files[0])}
+                            style={styles.fileInput}
+                            disabled={uploading.logo_white}
+                        />
+                        {uploading.logo_white && <span style={{color: '#fff'}}>Uploading...</span>}
+                    </div>
                 </div>
             </div>
 
@@ -343,12 +359,16 @@ const styles = {
         cursor: 'pointer',
         fontSize: '16px',
     },
+    logoGrid: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(2, 1fr)',
+        gap: '20px',
+    },
     imageUpload: {
         border: '2px dashed #ddd',
         borderRadius: '8px',
         padding: '15px',
         textAlign: 'center',
-        maxWidth: '300px',
     },
     imagePreview: {
         maxWidth: '100%',
