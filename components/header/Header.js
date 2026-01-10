@@ -49,11 +49,11 @@ const Header = (props) => {
                 <div className="container">
                     <div className="navbar-header">
                         <MobileMenu />
-                        <Link onClick={ClickHandler} className="navbar-brand" href="/home">
+                        <Link onClick={ClickHandler} className="navbar-brand" href="/">
                             <img
                                 src={props.hclass === 'header-style-1'
-                                    ? (globalContent?.logo_url || '/images/logo.png')
-                                    : (globalContent?.logo_white || '/images/logo-2.png')
+                                    ? (globalContent?.logo_white || '/images/logo.png')
+                                    : (globalContent?.logo_url || '/images/logo-2.png')
                                 }
                                 alt="Logo"
                                 style={{height: '50px', width: 'auto'}}

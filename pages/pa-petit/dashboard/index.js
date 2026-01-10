@@ -57,7 +57,6 @@ export default function Dashboard() {
         { title: 'Blogs (Items)', href: '/pa-petit/edit/blogs', icon: '✏️' },
         { title: 'Tags', href: '/pa-petit/edit/tags', icon: '🏷️' },
         { title: 'Global Content', href: '/pa-petit/edit/global', icon: '🌐' },
-        { title: 'Contact Form', href: '/pa-petit/edit/contact', icon: '📧' },
         { title: 'Partners', href: '/pa-petit/edit/partners', icon: '🤝' },
     ];
 

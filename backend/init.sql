@@ -609,43 +609,10 @@ CREATE TABLE global_content (
     logo_url VARCHAR(500),
     logo_white VARCHAR(500),
 
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- =============================================
--- CONTACT FORM (placeholders)
--- =============================================
-
-CREATE TABLE contact_form (
-    id SERIAL PRIMARY KEY,
-
-    name_placeholder_en VARCHAR(100),
-    name_placeholder_es VARCHAR(100),
-    name_placeholder_nl VARCHAR(100),
-    email_placeholder_en VARCHAR(100),
-    email_placeholder_es VARCHAR(100),
-    email_placeholder_nl VARCHAR(100),
-    phone_placeholder_en VARCHAR(100),
-    phone_placeholder_es VARCHAR(100),
-    phone_placeholder_nl VARCHAR(100),
-    service_default_en VARCHAR(100),
-    service_default_es VARCHAR(100),
-    service_default_nl VARCHAR(100),
-    service_option_1_en VARCHAR(100),
-    service_option_1_es VARCHAR(100),
-    service_option_1_nl VARCHAR(100),
-    service_option_2_en VARCHAR(100),
-    service_option_2_es VARCHAR(100),
-    service_option_2_nl VARCHAR(100),
-    service_option_3_en VARCHAR(100),
-    service_option_3_es VARCHAR(100),
-    service_option_3_nl VARCHAR(100),
-    message_placeholder_en VARCHAR(255),
-    message_placeholder_es VARCHAR(255),
-    message_placeholder_nl VARCHAR(255),
-    submit_button_en VARCHAR(100),
-    submit_button_es VARCHAR(100),
-    submit_button_nl VARCHAR(100),
+    -- Contact Info (used in footer)
+    phone VARCHAR(100),
+    email VARCHAR(255),
+    address VARCHAR(500),
 
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -677,21 +644,6 @@ CREATE TABLE blog_comments (
     author_website VARCHAR(255),
     content TEXT NOT NULL,
     is_approved BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- =============================================
--- CONTACT SUBMISSIONS
--- =============================================
-
-CREATE TABLE contact_submissions (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    phone VARCHAR(50),
-    subject VARCHAR(255),
-    message TEXT NOT NULL,
-    is_read BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -730,7 +682,6 @@ INSERT INTO blog_single_page (id) VALUES (1);
 INSERT INTO services_page (id) VALUES (1);
 INSERT INTO service_single_page (id) VALUES (1);
 INSERT INTO global_content (id) VALUES (1);
-INSERT INTO contact_form (id) VALUES (1);
 
 -- =============================================
 -- SAMPLE DATA

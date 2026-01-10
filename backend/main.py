@@ -90,12 +90,6 @@ def get_global(lang: str = Query("en"), db: Session = Depends(get_db)):
     return get_page_content(db, "global_content", lang)
 
 
-@app.get("/api/contact-form")
-def get_contact_form(lang: str = Query("en"), db: Session = Depends(get_db)):
-    validate_lang(lang)
-    return get_page_content(db, "contact_form", lang)
-
-
 @app.get("/api/services-page")
 def get_services_page(lang: str = Query("en"), db: Session = Depends(get_db)):
     validate_lang(lang)
@@ -203,26 +197,6 @@ def get_partners(db: Session = Depends(get_db)):
 # =============================================
 # PUBLIC ENDPOINTS - FORM SUBMISSIONS
 # =============================================
-
-class ContactSubmission(BaseModel):
-    name: str
-    email: str
-    phone: Optional[str] = None
-    subject: Optional[str] = None
-    message: str
-
-
-@app.post("/api/contact")
-def submit_contact(data: ContactSubmission, db: Session = Depends(get_db)):
-    query = text("""
-        INSERT INTO contact_submissions (name, email, phone, subject, message)
-        VALUES (:name, :email, :phone, :subject, :message)
-        RETURNING id
-    """)
-    result = db.execute(query, data.model_dump())
-    db.commit()
-    return {"success": True, "id": result.fetchone()[0]}
-
 
 class ServiceRequest(BaseModel):
     service_id: int
@@ -405,27 +379,6 @@ def admin_update_blog_single_page(
     clean_update_data(data)
     set_clauses = ", ".join([f"{key} = :{key}" for key in data.keys()])
     query = text(f"UPDATE blog_single_page SET {set_clauses}, updated_at = NOW() WHERE id = 1")
-    db.execute(query, data)
-    db.commit()
-    return {"success": True}
-
-
-@app.get("/api/admin/contact-form")
-def admin_get_contact_form(username: str = Depends(verify_token), db: Session = Depends(get_db)):
-    return get_all_columns(db, "contact_form")
-
-
-@app.put("/api/admin/contact-form")
-def admin_update_contact_form(
-    data: dict = Body(...),
-    username: str = Depends(verify_token),
-    db: Session = Depends(get_db)
-):
-    if not data:
-        raise HTTPException(status_code=400, detail="No data provided")
-    clean_update_data(data)
-    set_clauses = ", ".join([f"{key} = :{key}" for key in data.keys()])
-    query = text(f"UPDATE contact_form SET {set_clauses}, updated_at = NOW() WHERE id = 1")
     db.execute(query, data)
     db.commit()
     return {"success": True}
@@ -683,21 +636,6 @@ def admin_delete_tag(id: int, username: str = Depends(verify_token), db: Session
 # =============================================
 # ADMIN ENDPOINTS - VIEW SUBMISSIONS (Protected)
 # =============================================
-
-@app.get("/api/admin/contact-submissions")
-def admin_get_contact_submissions(username: str = Depends(verify_token), db: Session = Depends(get_db)):
-    query = text("SELECT * FROM contact_submissions ORDER BY created_at DESC")
-    result = db.execute(query).fetchall()
-    return [dict(row._mapping) for row in result]
-
-
-@app.put("/api/admin/contact-submissions/{id}/read")
-def admin_mark_contact_read(id: int, username: str = Depends(verify_token), db: Session = Depends(get_db)):
-    query = text("UPDATE contact_submissions SET is_read = true WHERE id = :id")
-    db.execute(query, {"id": id})
-    db.commit()
-    return {"success": True}
-
 
 @app.get("/api/admin/service-requests")
 def admin_get_service_requests(username: str = Depends(verify_token), db: Session = Depends(get_db)):

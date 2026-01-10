@@ -1,5 +1,4 @@
 import React from 'react'
-import VideoModal from '../ModalVideo/VideoModal'
 import Image from 'next/image'
 import abimg from '/public/images/about-2.jpg'
 
@@ -15,7 +14,6 @@ const About = ({ data }) => {
                             <div className="experience-text">
                                 {data?.about_experience_years || ''} {data?.about_experience_text || ''} <span>{data?.about_experience_highlight || ''}</span>
                             </div>
-                            <VideoModal />
                         </div>
                     </div>
                     <div className="col col-lg-6 order-lg-2 order-1 col-12">

@@ -2,15 +2,11 @@ import React, { Fragment, useState, useEffect } from 'react';
 import Navbar from '../components/Navbar/Navbar'
 import Hero from '../components/hero/hero';
 import Features from '../components/Features/Features';
-import WorkProcess from '../components/WorkProcess/WorkProcess';
 import About from '../components/about/about';
 import ServiceSection from '../components/ServiceSection/ServiceSection';
 import Testimonial from '../components/Testimonial/Testimonial';
-import ProjectSection from '../components/ProjectSection/ProjectSection';
 import FunFact from '../components/FunFact/FunFact';
-import TeamSection from '../components/TeamSection/TeamSection';
 import PartnerSection from '../components/PartnerSection/PartnerSection';
-import ContactSection from '../components/ContactSection/ContactSection';
 import BlogSection from '../components/BlogSection/BlogSection';
 import Footer from '../components/footer/Footer';
 import Scrollbar from '../components/scrollbar/scrollbar';
@@ -58,15 +54,11 @@ const HomePage = () => {
             <Navbar hclass={'header-style-1'} Logo={homeData?.logo_image || '/images/logo.png'} />
             <Hero data={homeData} />
             <Features data={homeData} />
-            {/* <WorkProcess data={homeData} /> */}
             <About data={homeData} />
             <ServiceSection data={homeData} services={services} />
             <Testimonial data={homeData} />
-            {/* <ProjectSection /> */}
             <FunFact data={homeData} />
-            {/* <TeamSection data={homeData} /> */}
             <PartnerSection data={homeData} />
-            {/* <ContactSection data={homeData} /> */}
             <BlogSection data={homeData} blogs={blogs} />
             <Footer />
             <Scrollbar />

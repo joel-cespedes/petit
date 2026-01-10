@@ -189,14 +189,19 @@ UPDATE global_content SET
     footer_copyright_es = 'Copyright © 2023 Jhair. Todos los derechos reservados.',
     footer_copyright_nl = 'Copyright © 2023 Jhair. Alle rechten voorbehouden.',
 
-    social_facebook = 'https://facebook.com',
-    social_twitter = 'https://twitter.com',
-    social_linkedin = 'https://linkedin.com',
-    social_instagram = 'https://instagram.com',
-    social_pinterest = 'https://pinterest.com',
+    social_facebook = 'https://facebook.com/jhair',
+    social_twitter = 'https://twitter.com/jhair',
+    social_linkedin = 'https://linkedin.com/company/jhair',
+    social_instagram = 'https://instagram.com/jhair',
+    social_pinterest = 'https://pinterest.com/jhair',
 
-    logo_url = '/images/logo.png',
-    logo_white = '/images/logo-2.png'
+    logo_url = '/images/logo-2.png',
+    logo_white = '/images/logo.png',
+
+    -- Contact Info
+    phone = '+31 20 123 4567',
+    email = 'info@jhair.com',
+    address = 'Herengracht 123, 1015 BG Amsterdam, Netherlands'
 WHERE id = 1;
 
 -- Insert about_page initial row
@@ -262,35 +267,112 @@ UPDATE about_page SET
     achievements_content_nl = '<ul><li>- Beste Bedrijfsadviseur Award 2020</li><li>- Succesvol geleid 100+ adviesprojecten</li><li>- Uitgelichte spreker op internationale zakelijke conferenties</li><li>- Auteur van bestseller boek "Strategische Groei"</li></ul>'
 WHERE id = 1;
 
--- Update contact_form
-UPDATE contact_form SET
-    name_placeholder_en = 'Your Name',
-    name_placeholder_es = 'Tu Nombre',
-    name_placeholder_nl = 'Uw Naam',
-    email_placeholder_en = 'Your Email',
-    email_placeholder_es = 'Tu Correo',
-    email_placeholder_nl = 'Uw E-mail',
-    phone_placeholder_en = 'Your Phone',
-    phone_placeholder_es = 'Tu Teléfono',
-    phone_placeholder_nl = 'Uw Telefoon',
-    service_default_en = 'Choose a Service',
-    service_default_es = 'Elige un Servicio',
-    service_default_nl = 'Kies een Dienst',
-    service_option_1_en = 'Tax Management',
-    service_option_1_es = 'Gestión Fiscal',
-    service_option_1_nl = 'Belastingbeheer',
-    service_option_2_en = 'Financial Advices',
-    service_option_2_es = 'Asesoría Financiera',
-    service_option_2_nl = 'Financieel Advies',
-    service_option_3_en = 'Risk Management',
-    service_option_3_es = 'Gestión de Riesgos',
-    service_option_3_nl = 'Risicobeheer',
-    message_placeholder_en = 'Message',
-    message_placeholder_es = 'Mensaje',
-    message_placeholder_nl = 'Bericht',
-    submit_button_en = 'Submit Now',
-    submit_button_es = 'Enviar Ahora',
-    submit_button_nl = 'Nu Versturen'
+-- Update service_single_page
+UPDATE service_single_page SET
+    page_breadcrumb_en = 'Service Details',
+    page_breadcrumb_es = 'Detalles del Servicio',
+    page_breadcrumb_nl = 'Service Details',
+
+    sidebar_all_services_en = 'All Services',
+    sidebar_all_services_es = 'Todos los Servicios',
+    sidebar_all_services_nl = 'Alle Diensten',
+
+    sidebar_features_title_en = 'Why Choose Us',
+    sidebar_features_title_es = '¿Por Qué Elegirnos?',
+    sidebar_features_title_nl = 'Waarom Ons Kiezen',
+    sidebar_feature_1_en = 'Expert Team',
+    sidebar_feature_1_es = 'Equipo Experto',
+    sidebar_feature_1_nl = 'Expert Team',
+    sidebar_feature_2_en = 'Proven Results',
+    sidebar_feature_2_es = 'Resultados Probados',
+    sidebar_feature_2_nl = 'Bewezen Resultaten',
+    sidebar_feature_3_en = 'Custom Solutions',
+    sidebar_feature_3_es = 'Soluciones Personalizadas',
+    sidebar_feature_3_nl = 'Maatwerkoplossingen',
+    sidebar_feature_4_en = '24/7 Support',
+    sidebar_feature_4_es = 'Soporte 24/7',
+    sidebar_feature_4_nl = '24/7 Ondersteuning',
+
+    sidebar_download_en = 'Download Brochure',
+    sidebar_download_es = 'Descargar Folleto',
+    sidebar_download_nl = 'Download Brochure',
+
+    sidebar_help_title_en = 'Need Help?',
+    sidebar_help_title_es = '¿Necesitas Ayuda?',
+    sidebar_help_title_nl = 'Hulp Nodig?',
+    sidebar_help_text_en = 'Contact us for a free consultation about your project.',
+    sidebar_help_text_es = 'Contáctenos para una consulta gratuita sobre su proyecto.',
+    sidebar_help_text_nl = 'Neem contact met ons op voor een gratis adviesgesprek.',
+    sidebar_help_phone = '+31 20 123 4567',
+    sidebar_contact_link_en = 'Contact Us',
+    sidebar_contact_link_es = 'Contáctanos',
+    sidebar_contact_link_nl = 'Neem Contact Op',
+
+    form_title_en = 'Request This Service',
+    form_title_es = 'Solicitar Este Servicio',
+    form_title_nl = 'Vraag Deze Dienst Aan',
+    form_name_placeholder_en = 'Your Name',
+    form_name_placeholder_es = 'Tu Nombre',
+    form_name_placeholder_nl = 'Uw Naam',
+    form_email_placeholder_en = 'Your Email',
+    form_email_placeholder_es = 'Tu Correo',
+    form_email_placeholder_nl = 'Uw E-mail',
+    form_phone_placeholder_en = 'Your Phone',
+    form_phone_placeholder_es = 'Tu Teléfono',
+    form_phone_placeholder_nl = 'Uw Telefoon',
+    form_submit_button_en = 'Send Request',
+    form_submit_button_es = 'Enviar Solicitud',
+    form_submit_button_nl = 'Verstuur Aanvraag'
+WHERE id = 1;
+
+-- Update blog_single_page
+UPDATE blog_single_page SET
+    page_breadcrumb_en = 'Blog',
+    page_breadcrumb_es = 'Blog',
+    page_breadcrumb_nl = 'Blog',
+
+    tags_label_en = 'Tags',
+    tags_label_es = 'Etiquetas',
+    tags_label_nl = 'Tags',
+    share_label_en = 'Share',
+    share_label_es = 'Compartir',
+    share_label_nl = 'Delen',
+    author_label_en = 'By',
+    author_label_es = 'Por',
+    author_label_nl = 'Door',
+
+    comments_title_en = 'Comments',
+    comments_title_es = 'Comentarios',
+    comments_title_nl = 'Reacties',
+    reply_button_en = 'Reply',
+    reply_button_es = 'Responder',
+    reply_button_nl = 'Reageren',
+    post_comments_title_en = 'Leave a Comment',
+    post_comments_title_es = 'Dejar un Comentario',
+    post_comments_title_nl = 'Laat een Reactie Achter',
+
+    form_comment_placeholder_en = 'Write your comment...',
+    form_comment_placeholder_es = 'Escribe tu comentario...',
+    form_comment_placeholder_nl = 'Schrijf uw reactie...',
+    form_website_placeholder_en = 'Website (optional)',
+    form_website_placeholder_es = 'Sitio Web (opcional)',
+    form_website_placeholder_nl = 'Website (optioneel)',
+    form_name_placeholder_en = 'Your Name',
+    form_name_placeholder_es = 'Tu Nombre',
+    form_name_placeholder_nl = 'Uw Naam',
+    form_email_placeholder_en = 'Your Email',
+    form_email_placeholder_es = 'Tu Correo',
+    form_email_placeholder_nl = 'Uw E-mail',
+    form_submit_button_en = 'Post Comment',
+    form_submit_button_es = 'Publicar Comentario',
+    form_submit_button_nl = 'Reactie Plaatsen',
+
+    nav_previous_en = 'Previous Post',
+    nav_previous_es = 'Artículo Anterior',
+    nav_previous_nl = 'Vorig Bericht',
+    nav_next_en = 'Next Post',
+    nav_next_es = 'Siguiente Artículo',
+    nav_next_nl = 'Volgend Bericht'
 WHERE id = 1;
 
 -- Update services_page
