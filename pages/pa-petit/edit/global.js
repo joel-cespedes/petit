@@ -25,12 +25,13 @@ export default function EditGlobal() {
         if (!file) return;
         setUploading(prev => ({ ...prev, [field]: true }));
         try {
-            const token = localStorage.getItem('admin_token');
             const formData = new FormData();
             formData.append('file', file);
-            const res = await fetch(`${API_URL}/api/admin/upload`, {
+            if (data[field]) {
+                formData.append('old_url', data[field]);
+            }
+            const res = await fetch('/api/upload', {
                 method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` },
                 body: formData,
             });
             if (res.ok) {

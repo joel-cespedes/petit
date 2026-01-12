@@ -52,12 +52,13 @@ export default function EditBlogPage() {
         setUploading(true);
         const formData = new FormData();
         formData.append('file', file);
+        if (data.background_image) {
+            formData.append('old_url', data.background_image);
+        }
 
         try {
-            const token = localStorage.getItem('admin_token');
-            const res = await fetch(`${API_URL}/api/admin/upload`, {
+            const res = await fetch('/api/upload', {
                 method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` },
                 body: formData,
             });
 

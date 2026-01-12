@@ -57,12 +57,13 @@ export default function EditAboutPage() {
         setUploading(true);
         const formData = new FormData();
         formData.append('file', file);
+        if (data[field]) {
+            formData.append('old_url', data[field]);
+        }
 
         try {
-            const token = localStorage.getItem('admin_token');
-            const res = await fetch(`${API_URL}/api/admin/upload`, {
+            const res = await fetch('/api/upload', {
                 method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` },
                 body: formData,
             });
 

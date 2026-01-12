@@ -30,13 +30,15 @@ export default function EditHome() {
         setUploading(prev => ({ ...prev, [field]: true }));
 
         try {
-            const token = localStorage.getItem('admin_token');
             const formData = new FormData();
             formData.append('file', file);
+            // Send old URL to delete previous image
+            if (data[field]) {
+                formData.append('old_url', data[field]);
+            }
 
-            const res = await fetch(`${API_URL}/api/admin/upload`, {
+            const res = await fetch('/api/upload', {
                 method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` },
                 body: formData,
             });
 
