@@ -1,5 +1,4 @@
-import fs from 'fs';
-import path from 'path';
+import { v2 as cloudinary } from 'cloudinary';
 import { IncomingForm } from 'formidable';
 
 export const config = {
@@ -8,12 +7,12 @@ export const config = {
     },
 };
 
-const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads');
-
-// Ensure upload directory exists
-if (!fs.existsSync(UPLOAD_DIR)) {
-    fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-}
+// Cloudinary config
+cloudinary.config({
+    cloud_name: 'dmonuu1zp',
+    api_key: '231434456357814',
+    api_secret: 'hlBhfzcd87uXsVIV4DY-xmmR-pg',
+});
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -21,7 +20,6 @@ export default async function handler(req, res) {
     }
 
     const form = new IncomingForm({
-        uploadDir: UPLOAD_DIR,
         keepExtensions: true,
         maxFileSize: 10 * 1024 * 1024, // 10MB
     });
@@ -37,25 +35,26 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'No file uploaded' });
         }
 
-        // Generate unique filename
-        const ext = path.extname(file.originalFilename || file.name || '.jpg');
-        const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(7)}${ext}`;
-        const newPath = path.join(UPLOAD_DIR, uniqueName);
+        try {
+            // Upload to Cloudinary
+            const result = await cloudinary.uploader.upload(file.filepath || file.path, {
+                folder: 'petit',
+            });
 
-        // Rename file to unique name
-        fs.renameSync(file.filepath || file.path, newPath);
-
-        // Delete old image if provided
-        const oldUrl = fields.old_url?.[0] || fields.old_url;
-        if (oldUrl && oldUrl.startsWith('/uploads/')) {
-            const oldFilename = oldUrl.replace('/uploads/', '');
-            const oldPath = path.join(UPLOAD_DIR, oldFilename);
-            if (fs.existsSync(oldPath)) {
-                fs.unlinkSync(oldPath);
-                console.log(`Deleted old image: ${oldPath}`);
+            // Delete old image from Cloudinary if provided
+            const oldUrl = fields.old_url?.[0] || fields.old_url;
+            if (oldUrl && oldUrl.includes('cloudinary.com')) {
+                // Extract public_id from Cloudinary URL
+                const matches = oldUrl.match(/\/petit\/([^/.]+)/);
+                if (matches && matches[1]) {
+                    await cloudinary.uploader.destroy(`petit/${matches[1]}`).catch(console.error);
+                }
             }
-        }
 
-        return res.status(200).json({ url: `/uploads/${uniqueName}` });
+            return res.status(200).json({ url: result.secure_url });
+        } catch (error) {
+            console.error('Cloudinary upload error:', error);
+            return res.status(500).json({ error: 'Upload failed' });
+        }
     });
 }
