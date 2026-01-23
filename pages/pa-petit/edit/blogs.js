@@ -158,6 +158,17 @@ export default function EditBlogs() {
 
     const handleSave = async () => {
         setMessage('');
+
+        // Validación
+        if (!editing.slug || !editing.slug.trim()) {
+            setMessage('Error: Slug is required');
+            return;
+        }
+        if (!editing.title_en || !editing.title_en.trim()) {
+            setMessage('Error: Title (English) is required');
+            return;
+        }
+
         try {
             const token = localStorage.getItem('admin_token');
             const isNew = !editing.id;
