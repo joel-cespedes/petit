@@ -7,11 +7,11 @@ export const config = {
     },
 };
 
-// Cloudinary config
+// Cloudinary config from environment variables
 cloudinary.config({
-    cloud_name: 'dmonuu1zp',
-    api_key: '231434456357814',
-    api_secret: 'hlBhfzcd87uXsVIV4DY-xmmR-pg',
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 export default async function handler(req, res) {
