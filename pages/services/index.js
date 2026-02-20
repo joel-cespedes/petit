@@ -22,7 +22,8 @@ const ServicePage = () => {
                     fetch(`${API_URL}/api/services-page?lang=${language}`)
                 ]);
                 if (servicesRes.ok) {
-                    setServices(await servicesRes.json());
+                    const data = await servicesRes.json();
+                    setServices(data.reverse());
                 }
                 if (servicesPageRes.ok) {
                     setPageData(await servicesPageRes.json());

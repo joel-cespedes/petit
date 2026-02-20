@@ -21,12 +21,12 @@ const FunFact = ({ data }) => {
             Symbol: data?.funfact_3_symbol || '',
             icon: `fi ${data?.funfact_3_icon || 'flaticon-projector'}`,
         },
-        {
-            title: data?.funfact_4_number || '0',
-            subTitle: data?.funfact_4_label || '',
-            Symbol: data?.funfact_4_symbol || '',
-            icon: `fi ${data?.funfact_4_icon || 'flaticon-medal'}`,
-        },
+        // {
+        //     title: data?.funfact_4_number || '0',
+        //     subTitle: data?.funfact_4_label || '',
+        //     Symbol: data?.funfact_4_symbol || '',
+        //     icon: `fi ${data?.funfact_4_icon || 'flaticon-medal'}`,
+        // },
     ];
 
     return (

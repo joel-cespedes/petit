@@ -335,16 +335,16 @@ export default function EditServices() {
             <table style={styles.table}>
                 <thead>
                     <tr>
-                        <th style={styles.th}>ID</th>
+                        <th style={styles.th}>#</th>
                         <th style={styles.th}>Slug</th>
                         <th style={styles.th}>Title (EN)</th>
                         <th style={styles.th}>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {services.map((service) => (
+                    {services.map((service, index) => (
                         <tr key={service.id}>
-                            <td style={styles.td}>{service.id}</td>
+                            <td style={styles.td}>{index + 1}</td>
                             <td style={styles.td}>{service.slug}</td>
                             <td style={styles.td}>{service.title_en}</td>
                             <td style={styles.td}>

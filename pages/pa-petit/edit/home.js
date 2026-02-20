@@ -125,6 +125,7 @@ export default function EditHome() {
                 <div style={styles.imagesGrid}>
                     <div style={styles.imageUpload}>
                         <label style={styles.label}>Hero Background Image</label>
+                        <span style={styles.dimLabel}>1920 × 850 px</span>
                         {data?.hero_image && (
                             <img src={getImageUrl(data.hero_image)} alt="Hero" style={styles.imagePreview} />
                         )}
@@ -139,6 +140,7 @@ export default function EditHome() {
                     </div>
                     <div style={styles.imageUpload}>
                         <label style={styles.label}>About Section Image</label>
+                        <span style={styles.dimLabel}>450 × 450 px</span>
                         {data?.about_image && (
                             <img src={getImageUrl(data.about_image)} alt="About" style={styles.imagePreview} />
                         )}
@@ -153,6 +155,7 @@ export default function EditHome() {
                     </div>
                     <div style={styles.imageUpload}>
                         <label style={styles.label}>Testimonial Quote Icon</label>
+                        <span style={styles.dimLabel}>76 × 54 px</span>
                         {data?.testimonial_quote_icon && (
                             <img src={getImageUrl(data.testimonial_quote_icon)} alt="Quote Icon" style={styles.imagePreview} />
                         )}

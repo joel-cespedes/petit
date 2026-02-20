@@ -53,11 +53,11 @@ const HomePage = () => {
         <Fragment>
             <Navbar hclass={'header-style-1'} Logo={homeData?.logo_image || '/images/logo.png'} />
             <Hero data={homeData} />
-            <Features data={homeData} />
+            {/* <Features data={homeData} /> */}
             <About data={homeData} />
             <ServiceSection data={homeData} services={services} />
-            <Testimonial data={homeData} />
             <FunFact data={homeData} />
+            <Testimonial data={homeData} />
             <PartnerSection data={homeData} />
             <BlogSection data={homeData} blogs={blogs} />
             <Footer />

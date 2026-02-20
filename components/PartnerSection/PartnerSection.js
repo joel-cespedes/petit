@@ -8,7 +8,7 @@ const PartnerSection = ({ data }) => {
     }
 
     return (
-        <section className="cta-with-partners">
+        <section className="cta-with-partners section-padding">
             <div className="container">
                 <div className="row">
                     <div className="col col-lg-6 col-12">
