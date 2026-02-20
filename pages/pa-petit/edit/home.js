@@ -170,6 +170,7 @@ export default function EditHome() {
                     </div>
                     <div style={styles.imageUpload}>
                         <label style={styles.label}>Partner Section Image</label>
+                        <span style={styles.dimLabel}>630 × 311 px</span>
                         {data?.partner_image && (
                             <img src={getImageUrl(data.partner_image)} alt="Partner" style={styles.imagePreview} />
                         )}
@@ -614,6 +615,12 @@ const styles = {
         objectFit: 'cover',
         borderRadius: '4px',
         marginBottom: '10px',
+    },
+    dimLabel: {
+        display: 'block',
+        fontSize: '12px',
+        color: '#999',
+        marginBottom: '8px',
     },
     fileInput: {
         width: '100%',
