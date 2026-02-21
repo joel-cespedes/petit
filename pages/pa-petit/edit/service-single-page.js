@@ -84,7 +84,6 @@ export default function EditServiceSinglePage() {
         { name: 'sidebar_feature_4', label: 'Sidebar: Feature 4', type: 'text' },
         { name: 'sidebar_help_title', label: 'Sidebar: Help Title', type: 'text' },
         { name: 'sidebar_help_text', label: 'Sidebar: Help Text', type: 'textarea' },
-        { name: 'sidebar_contact_link', label: 'Sidebar: Contact Link Text', type: 'text' },
     ];
 
     return (
@@ -156,8 +155,20 @@ export default function EditServiceSinglePage() {
                             placeholder="+1234567890"
                         />
                     </div>
+
+                    <h3 style={styles.sectionTitle}>Contact Button</h3>
                     <div style={styles.formGroup}>
-                        <label style={styles.label}>Contact Button URL</label>
+                        <label style={styles.label}>Texto del botón ({languageNames[activeTab]})</label>
+                        <input
+                            type="text"
+                            value={data?.[`sidebar_contact_link_${activeTab}`] || ''}
+                            onChange={(e) => handleChange(`sidebar_contact_link_${activeTab}`, e.target.value)}
+                            style={styles.input}
+                            placeholder="Contact Us"
+                        />
+                    </div>
+                    <div style={styles.formGroup}>
+                        <label style={styles.label}>URL externa</label>
                         <input
                             type="text"
                             value={data?.sidebar_contact_url || ''}
@@ -165,7 +176,7 @@ export default function EditServiceSinglePage() {
                             style={styles.input}
                             placeholder="https://example.com"
                         />
-                        <span style={{fontSize: '12px', color: '#999'}}>External link (opens in new tab)</span>
+                        <span style={{fontSize: '12px', color: '#999'}}>Se abre en una nueva pestaña</span>
                     </div>
                 </div>
 
