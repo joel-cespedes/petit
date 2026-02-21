@@ -35,7 +35,7 @@ const HomePage = () => {
                 }
                 if (servicesRes.ok) {
                     const data = await servicesRes.json();
-                    setServices(data);
+                    setServices(data.reverse());
                 }
                 if (blogsRes.ok) {
                     const data = await blogsRes.json();

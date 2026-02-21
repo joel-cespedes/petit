@@ -156,6 +156,17 @@ export default function EditServiceSinglePage() {
                             placeholder="+1234567890"
                         />
                     </div>
+                    <div style={styles.formGroup}>
+                        <label style={styles.label}>Contact Button URL</label>
+                        <input
+                            type="text"
+                            value={data?.sidebar_contact_url || ''}
+                            onChange={(e) => handleChange('sidebar_contact_url', e.target.value)}
+                            style={styles.input}
+                            placeholder="https://example.com"
+                        />
+                        <span style={{fontSize: '12px', color: '#999'}}>External link (opens in new tab)</span>
+                    </div>
                 </div>
 
                 <button type="submit" style={styles.submitBtn} disabled={saving}>

@@ -163,7 +163,7 @@ const ServiceSinglePage = () => {
                                             <h4>{pageData.sidebar_help_title}</h4>
                                             {pageData.sidebar_help_text && <p>{pageData.sidebar_help_text}</p>}
                                             {pageData.sidebar_help_phone && <p>Phone: {pageData.sidebar_help_phone}</p>}
-                                            <a href={`mailto:${globalContent?.email || ''}`}>
+                                            <a href={pageData.sidebar_contact_url || '#'} target="_blank" rel="noopener noreferrer">
                                                 {pageData.sidebar_contact_link || 'Contact Us'}
                                             </a>
                                         </div>
