@@ -17,12 +17,11 @@ const ClickHandler = () => {
 const ServiceSinglePage = () => {
     const router = useRouter();
     const { slug } = router.query;
-    const { language } = useLanguage();
+    const { language, globalContent } = useLanguage();
 
     const [service, setService] = useState(null);
     const [allServices, setAllServices] = useState([]);
     const [pageData, setPageData] = useState(null);
-    const [globalContent, setGlobalContent] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -31,11 +30,10 @@ const ServiceSinglePage = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const [serviceRes, allServicesRes, pageRes, globalRes] = await Promise.all([
+                const [serviceRes, allServicesRes, pageRes] = await Promise.all([
                     fetch(`${API_URL}/api/services/${slug}?lang=${language}`),
                     fetch(`${API_URL}/api/services?lang=${language}`),
-                    fetch(`${API_URL}/api/service-single-page?lang=${language}`),
-                    fetch(`${API_URL}/api/global?lang=${language}`)
+                    fetch(`${API_URL}/api/service-single-page?lang=${language}`)
                 ]);
 
                 if (serviceRes.ok) {
@@ -46,9 +44,6 @@ const ServiceSinglePage = () => {
                 }
                 if (pageRes.ok) {
                     setPageData(await pageRes.json());
-                }
-                if (globalRes.ok) {
-                    setGlobalContent(await globalRes.json());
                 }
             } catch (err) {
                 console.error('Error fetching service:', err);

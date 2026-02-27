@@ -1,30 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import Link from "next/link";
 import { useLanguage } from '../../context/LanguageContext';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 const ClickHandler = () => {
     window.scrollTo(10, 0);
 }
 
 const Footer = (props) => {
-    const { language } = useLanguage();
-    const [globalContent, setGlobalContent] = useState(null);
-
-    useEffect(() => {
-        const fetchGlobalContent = async () => {
-            try {
-                const res = await fetch(`${API_URL}/api/global?lang=${language}`);
-                if (res.ok) {
-                    setGlobalContent(await res.json());
-                }
-            } catch (err) {
-                console.error('Error fetching global content:', err);
-            }
-        };
-        fetchGlobalContent();
-    }, [language]);
+    const { globalContent } = useLanguage();
 
     return (
         <footer className="site-footer">
@@ -40,7 +23,7 @@ const Footer = (props) => {
                                         style={{maxHeight: '50px', width: 'auto'}}
                                     />
                                 </div>
-                                <p>{globalContent?.footer_about_text || 'Samsa was a travelling salesman and above it there hung a picture that he had recently cut out of an illustrated magazine and housed'}</p>
+                                <p>{globalContent?.footer_about_text || ''}</p>
                             </div>
                         </div>
                         <div className="col col-lg-4 col-md-6 col-12">
@@ -75,7 +58,7 @@ const Footer = (props) => {
                     <div className="row">
                         <div className="separator"></div>
                         <div className="col col-xs-12">
-                            <p className="copyright">{globalContent?.footer_copyright || 'Copyright © 2024 Jhair. All rights reserved.'}</p>
+                            <p className="copyright">{globalContent?.footer_copyright || ''}</p>
                             <div className="social-icons">
                                 <ul>
                                     {globalContent?.social_facebook && (

@@ -149,9 +149,11 @@ export default function EditGlobal() {
                 <h3 style={styles.sectionTitle}>Site Logos</h3>
                 <div style={styles.logoGrid}>
                     <div style={styles.imageUpload}>
-                        <label style={styles.label}>Logo Dark (for light backgrounds)</label>
+                        <span style={styles.label}>Logo Dark (for light backgrounds)</span>
                         {data?.logo_url && (
-                            <img src={getImageUrl(data.logo_url)} alt="Logo Dark" style={styles.imagePreview} />
+                            <div style={{padding: '10px', marginBottom: '10px'}}>
+                                <img src={getImageUrl(data.logo_url)} alt="Logo Dark" width="200" height="60" style={{objectFit: 'contain', display: 'block', margin: '0 auto'}} />
+                            </div>
                         )}
                         <input
                             type="file"
@@ -163,9 +165,11 @@ export default function EditGlobal() {
                         {uploading.logo_url && <span>Uploading...</span>}
                     </div>
                     <div style={{...styles.imageUpload, backgroundColor: '#333'}}>
-                        <label style={{...styles.label, color: '#fff'}}>Logo White (for dark backgrounds)</label>
+                        <span style={{...styles.label, color: '#fff'}}>Logo White (for dark backgrounds)</span>
                         {data?.logo_white && (
-                            <img src={getImageUrl(data.logo_white)} alt="Logo White" style={styles.imagePreview} />
+                            <div style={{padding: '10px', marginBottom: '10px'}}>
+                                <img src={getImageUrl(data.logo_white)} alt="Logo White" width="200" height="60" style={{objectFit: 'contain', display: 'block', margin: '0 auto'}} />
+                            </div>
                         )}
                         <input
                             type="file"
@@ -381,11 +385,12 @@ const styles = {
         textAlign: 'center',
     },
     imagePreview: {
-        maxWidth: '100%',
-        maxHeight: '100px',
+        maxWidth: '200px',
+        height: '60px',
         objectFit: 'contain',
         borderRadius: '4px',
-        marginBottom: '10px',
+        display: 'block',
+        margin: '10px auto',
     },
     fileInput: {
         width: '100%',

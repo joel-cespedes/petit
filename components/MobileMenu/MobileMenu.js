@@ -1,29 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import List from "@mui/material/List";
+import React, { useState } from 'react';
 import ListItem from "@mui/material/List";
 import Link from "next/link";
 import { useLanguage } from '../../context/LanguageContext';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-
 const MobileMenu = () => {
     const [menuActive, setMenuState] = useState(false);
-    const [globalContent, setGlobalContent] = useState(null);
-    const { language, changeLanguage } = useLanguage();
-
-    useEffect(() => {
-        const fetchGlobalContent = async () => {
-            try {
-                const res = await fetch(`${API_URL}/api/global?lang=${language}`);
-                if (res.ok) {
-                    setGlobalContent(await res.json());
-                }
-            } catch (err) {
-                console.error('Error fetching global content:', err);
-            }
-        };
-        fetchGlobalContent();
-    }, [language]);
+    const { language, changeLanguage, globalContent } = useLanguage();
 
     const ClickHandler = () => {
         window.scrollTo(10, 0);
