@@ -23,7 +23,7 @@ const ServicePage = () => {
                 ]);
                 if (servicesRes.ok) {
                     const data = await servicesRes.json();
-                    setServices(data.reverse());
+                    setServices(data);
                 }
                 if (servicesPageRes.ok) {
                     setPageData(await servicesPageRes.json());

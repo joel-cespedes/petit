@@ -31,7 +31,7 @@ const ServiceSection = ({ data, services = [] }) => {
                 </div>
                 <div className="row">
                     <div className="col col-xs-12">
-                        <div className="services-grids clearfix">
+                        <div className="services-grids">
                             {services.map((service) => (
                                 <div className="grid" key={service.id}>
                                     <div className="icon">

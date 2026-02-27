@@ -35,7 +35,7 @@ const HomePage = () => {
                 }
                 if (servicesRes.ok) {
                     const data = await servicesRes.json();
-                    setServices(data.reverse());
+                    setServices(data);
                 }
                 if (blogsRes.ok) {
                     const data = await blogsRes.json();
@@ -54,10 +54,10 @@ const HomePage = () => {
             <Navbar hclass={'header-style-1'} Logo={homeData?.logo_image || '/images/logo.png'} />
             <Hero data={homeData} />
             {/* <Features data={homeData} /> */}
-            <About data={homeData} />
+            {/* <About data={homeData} /> */}
             <ServiceSection data={homeData} services={services} />
-            <FunFact data={homeData} />
             <Testimonial data={homeData} />
+            <FunFact data={homeData} />
             <PartnerSection data={homeData} />
             <BlogSection data={homeData} blogs={blogs} />
             <Footer />

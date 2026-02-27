@@ -30,7 +30,7 @@ const FunFact = ({ data }) => {
     ];
 
     return (
-        <section className="fun-fact-section">
+        <section className="fun-fact-section section-padding">
             <div className="container">
                 <div className="row">
                     <div className="col col-xs-12">
