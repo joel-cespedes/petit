@@ -8,7 +8,6 @@
 		color: $theme-primary-color;
 		display: block;
 		margin-top: -6px;
-		text-transform: capitalize;
 	}
 
 	h3 {
@@ -44,7 +43,6 @@
 		color: $theme-primary-color;
 		display: block;
 		margin-top: -6px;
-		text-transform: capitalize;
 		position: relative;
 
 		&:before {
@@ -64,7 +62,6 @@
 		font-weight: bold;
 		line-height: 1.2em;
 		margin: 0.2em 0 0;
-		text-transform: capitalize;
 
 		@include media-query(991px) {
 			font-size: 32px;
@@ -93,7 +90,6 @@
 		color: $theme-primary-color;
 		display: block;
 		margin-top: -6px;
-		text-transform: capitalize;
 		position: relative;
 	}
 
@@ -103,7 +99,6 @@
 		font-weight: bold;
 		line-height: 1.2em;
 		margin: 0.2em 0 0.5em;
-		text-transform: capitalize;
 
 		@include media-query(991px) {
 			font-size: 32px;

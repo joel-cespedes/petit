@@ -22,7 +22,6 @@
 			font-size: 28px;
 			font-size: calc-rem-value(28);
 			margin: 1em 0;
-			text-transform: capitalize;
 
 			@include media-query(767px) {
 				font-size: 25px;
@@ -33,7 +32,6 @@
 		h3 {
 			font-size: 18px;
 			font-size: calc-rem-value(18);
-			text-transform: capitalize;
 			margin: 1.7em 0 1em;
 		}
 
