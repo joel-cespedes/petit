@@ -5,7 +5,7 @@ import Link from "next/link";
 const Hero = ({ data }) => {
     return (
         <section className="hero-slider hero-style-1">
-            <div className="slide-inner slide-bg-image" style={{ backgroundImage: `url(${data?.hero_image || '/images/slider/slide-1.jpg'})` }}>
+            <div className="slide-inner slide-bg-image" style={{ backgroundImage: data?.hero_image ? `url(${data.hero_image})` : 'none', backgroundColor: '#1a1a1a' }}>
                 <div className="container">
                     <div className="slide-title">
                         <h2>{data?.hero_title || ''}</h2>
