@@ -1,20 +1,26 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, useRef } from 'react';
 import Navbar from '../../components/Navbar/Navbar';
 import PageTitle from '../../components/pagetitle/PageTitle'
 import Scrollbar from '../../components/scrollbar/scrollbar'
 import Footer from '../../components/footer/Footer';
-import Logo from '/public/images/logo-2.png'
 import Link from 'next/link';
 import { useLanguage } from '../../context/LanguageContext';
+import { safeFetch, getGlobalContent, SSR_LANG } from '../../utils/serverData';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
-const AboutPage = () => {
+const AboutPage = ({ initialData }) => {
     const { language } = useLanguage();
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [data, setData] = useState(initialData || null);
+    const [loading, setLoading] = useState(initialData == null);
+
+    const skipNextFetch = useRef(language === SSR_LANG && initialData != null);
 
     useEffect(() => {
+        if (skipNextFetch.current) {
+            skipNextFetch.current = false;
+            return;
+        }
         fetchData();
     }, [language]);
 
@@ -34,7 +40,7 @@ const AboutPage = () => {
     if (loading) {
         return (
             <Fragment>
-                <Navbar hclass={'header-style-3'} Logo={Logo} />
+                <Navbar hclass={'header-style-3'} />
                 <div style={{ padding: '100px', textAlign: 'center' }}>Loading...</div>
                 <Footer />
             </Fragment>
@@ -43,7 +49,7 @@ const AboutPage = () => {
 
     return (
         <Fragment>
-            <Navbar hclass={'header-style-3'} Logo={Logo} />
+            <Navbar hclass={'header-style-3'} />
             <PageTitle pageTitle={data?.page_title || 'About Us'} pagesub={data?.page_breadcrumb || 'About'} backgroundImage={data?.background_image} />
             <section className="team-sigle-section section-padding">
                 <div className="container">
@@ -135,5 +141,17 @@ const AboutPage = () => {
         </Fragment>
     );
 };
+
+export async function getStaticProps() {
+    const [data, globalContent] = await Promise.all([
+        safeFetch(`/api/about?lang=${SSR_LANG}`, null),
+        getGlobalContent(),
+    ]);
+
+    return {
+        props: { initialData: data, globalContent },
+        revalidate: 60,
+    };
+}
 
 export default AboutPage;

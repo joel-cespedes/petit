@@ -55,7 +55,7 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <LanguageProvider>
+          <LanguageProvider initialGlobalContent={pageProps?.globalContent || null}>
             <Component {...pageProps} />
             <ToastContainer />
           </LanguageProvider>

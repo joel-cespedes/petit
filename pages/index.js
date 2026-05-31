@@ -11,11 +11,9 @@ import BlogSection from '../components/BlogSection/BlogSection';
 import Footer from '../components/footer/Footer';
 import Scrollbar from '../components/scrollbar/scrollbar';
 import { useLanguage } from '../context/LanguageContext';
+import { safeFetch, getGlobalContent, SSR_LANG } from '../utils/serverData';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-
-// Idioma con el que se pre-renderiza la página en el servidor (ISR).
-const SSR_LANG = 'en';
 
 const HomePage = ({ initialHome, initialServices, initialBlogs }) => {
     const { language } = useLanguage();
@@ -81,19 +79,11 @@ const HomePage = ({ initialHome, initialServices, initialBlogs }) => {
 // ISR: el servidor pre-renderiza la home con el contenido ya incrustado
 // (idioma por defecto) y revalida cada 60s. Elimina el flash de texto vacío.
 export async function getStaticProps() {
-    const safeFetch = async (url, fallback) => {
-        try {
-            const res = await fetch(url);
-            return res.ok ? await res.json() : fallback;
-        } catch (err) {
-            return fallback;
-        }
-    };
-
-    const [home, services, blogsRaw] = await Promise.all([
-        safeFetch(`${API_URL}/api/home?lang=${SSR_LANG}`, null),
-        safeFetch(`${API_URL}/api/services?lang=${SSR_LANG}`, []),
-        safeFetch(`${API_URL}/api/blogs?lang=${SSR_LANG}`, { blogs: [] }),
+    const [home, services, blogsRaw, globalContent] = await Promise.all([
+        safeFetch(`/api/home?lang=${SSR_LANG}`, null),
+        safeFetch(`/api/services?lang=${SSR_LANG}`, []),
+        safeFetch(`/api/blogs?lang=${SSR_LANG}`, { blogs: [] }),
+        getGlobalContent(),
     ]);
 
     return {
@@ -101,6 +91,7 @@ export async function getStaticProps() {
             initialHome: home,
             initialServices: Array.isArray(services) ? services : [],
             initialBlogs: blogsRaw?.blogs || [],
+            globalContent, // -> _app lo pasa a LanguageProvider (logo sin flash)
         },
         revalidate: 60, // regenera la página como máximo cada 60 segundos
     };

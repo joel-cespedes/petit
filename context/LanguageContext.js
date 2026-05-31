@@ -1,13 +1,17 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useRef } from 'react';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 const LanguageContext = createContext();
 
-export function LanguageProvider({ children }) {
+export function LanguageProvider({ children, initialGlobalContent = null }) {
     const [language, setLanguage] = useState('en');
-    const [globalContent, setGlobalContent] = useState(null);
-    const [globalLoading, setGlobalLoading] = useState(true);
+    // Arranca con el contenido global pre-renderizado en el servidor (sin flash de logo).
+    const [globalContent, setGlobalContent] = useState(initialGlobalContent);
+    const [globalLoading, setGlobalLoading] = useState(initialGlobalContent == null);
+
+    // Evita el primer re-fetch redundante: el servidor ya entregó el contenido en inglés.
+    const skipNextGlobalFetch = useRef(initialGlobalContent != null);
 
     useEffect(() => {
         const savedLang = localStorage.getItem('language');
@@ -17,6 +21,13 @@ export function LanguageProvider({ children }) {
     }, []);
 
     useEffect(() => {
+        // Si el idioma es el pre-renderizado (en) y ya tenemos los datos, no re-fetchear.
+        if (skipNextGlobalFetch.current && language === 'en') {
+            skipNextGlobalFetch.current = false;
+            return;
+        }
+        skipNextGlobalFetch.current = false;
+
         const fetchGlobalContent = async () => {
             setGlobalLoading(true);
             try {

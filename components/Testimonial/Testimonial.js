@@ -8,7 +8,7 @@ const Testimonial = ({ data, tClass }) => {
         left: '50%',
         top: 0,
         transform: 'translateX(-50%)',
-        backgroundImage: `url(${data?.testimonial_quote_icon || '/images/quote.png'})`,
+        backgroundImage: data?.testimonial_quote_icon ? `url(${data.testimonial_quote_icon})` : 'none',
         backgroundPosition: 'center center',
         backgroundSize: 'auto',
         backgroundRepeat: 'no-repeat',

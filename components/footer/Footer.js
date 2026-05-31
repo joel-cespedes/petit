@@ -17,11 +17,13 @@ const Footer = (props) => {
                         <div className="col col-lg-4 col-md-6 col-12">
                             <div className="widget about-widget">
                                 <div className="logo widget-title">
-                                    <img
-                                        src={globalContent?.logo_white || '/images/logo-2.png'}
-                                        alt="Logo"
-                                        style={{maxHeight: '50px', width: 'auto'}}
-                                    />
+                                    {globalContent?.logo_white && (
+                                        <img
+                                            src={globalContent.logo_white}
+                                            alt="Logo"
+                                            style={{maxHeight: '50px', width: 'auto'}}
+                                        />
+                                    )}
                                 </div>
                                 <p>{globalContent?.footer_about_text || ''}</p>
                             </div>

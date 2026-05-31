@@ -4,9 +4,9 @@ import PageTitle from '../../components/pagetitle/PageTitle'
 import Navbar from '../../components/Navbar/Navbar';
 import Footer from '../../components/footer/Footer';
 import Scrollbar from '../../components/scrollbar/scrollbar'
-import Logo from '/public/images/logo-2.png'
 import Link from 'next/link';
 import { useLanguage } from '../../context/LanguageContext';
+import { getGlobalContent } from '../../utils/serverData';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -190,7 +190,7 @@ const BlogPage = () => {
 
     return (
         <Fragment>
-            <Navbar hclass={'header-style-3'} Logo={Logo} />
+            <Navbar hclass={'header-style-3'} />
             <PageTitle
                 pageTitle={getPageTitle()}
                 pagesub={pageData?.page_breadcrumb || 'Blog'}
@@ -288,5 +288,13 @@ const BlogPage = () => {
         </Fragment>
     )
 };
+
+export async function getStaticProps() {
+    const globalContent = await getGlobalContent();
+    return {
+        props: { globalContent },
+        revalidate: 60,
+    };
+}
 
 export default BlogPage;

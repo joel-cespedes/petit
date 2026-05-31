@@ -32,14 +32,17 @@ const Header = (props) => {
                     <div className="navbar-header">
                         <MobileMenu />
                         <Link onClick={ClickHandler} className="navbar-brand" href="/">
-                            <img
-                                src={props.hclass === 'header-style-1'
-                                    ? (globalContent?.logo_white || '/images/logo.png')
-                                    : (globalContent?.logo_url || '/images/logo-2.png')
-                                }
-                                alt="Logo"
-                                style={{height: '50px', width: 'auto'}}
-                            />
+                            {(() => {
+                                const logoSrc = props.hclass === 'header-style-1'
+                                    ? globalContent?.logo_white
+                                    : globalContent?.logo_url;
+                                // Sin fallback de plantilla: nada hasta que cargue el logo real.
+                                return logoSrc ? (
+                                    <img src={logoSrc} alt="Logo" style={{height: '50px', width: 'auto'}} />
+                                ) : (
+                                    <span style={{display: 'inline-block', height: '50px'}} />
+                                );
+                            })()}
                         </Link>
                     </div>
                     <div id="navbar" className="collapse navbar-collapse navigation-holder">

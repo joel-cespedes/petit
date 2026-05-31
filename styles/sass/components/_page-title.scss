@@ -2,7 +2,10 @@
 	#page title
 ******************************/
 .page-title {
-	background-image: var(--page-bg, url("/images/page-title.jpg"));
+	// Sin imagen de plantilla por defecto: usa un color de fondo hasta que
+	// llegue la imagen real (--page-bg) desde los datos, evitando el flash.
+	background-image: var(--page-bg, none);
+	background-color: #1a1a1a;
 	background-position: center center;
 	background-size: cover;
 	background-repeat: no-repeat;

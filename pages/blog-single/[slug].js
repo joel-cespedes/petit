@@ -6,8 +6,8 @@ import Scrollbar from '../../components/scrollbar/scrollbar'
 import { useRouter } from 'next/router'
 import BlogSingle from '../../components/BlogDetails/BlogSingle.js'
 import Footer from '../../components/footer/Footer';
-import Logo from '/public/images/logo-2.png'
 import { useLanguage } from '../../context/LanguageContext';
+import { getGlobalContent } from '../../utils/serverData';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
@@ -49,7 +49,7 @@ const BlogDetails = () => {
     if (loading) {
         return (
             <Fragment>
-                <Navbar hclass={'header-style-3'} Logo={Logo}/>
+                <Navbar hclass={'header-style-3'}/>
                 <PageTitle pageTitle="Loading..." pagesub={'Blog'} />
                 <div style={{padding: '100px', textAlign: 'center'}}>Loading...</div>
                 <Footer />
@@ -90,7 +90,7 @@ const BlogDetails = () => {
                 {/* Canonical URL */}
                 <link rel="canonical" href={pageUrl} />
             </Head>
-            <Navbar hclass={'header-style-3'} Logo={Logo}/>
+            <Navbar hclass={'header-style-3'}/>
             <PageTitle pageTitle={blog?.title || 'Blog'} pagesub={pageContent?.page_breadcrumb || 'Blog'} backgroundImage={blog?.background_image} />
             <BlogSingle blog={blog} pageContent={pageContent} />
             <Footer />
@@ -98,5 +98,10 @@ const BlogDetails = () => {
         </Fragment>
     )
 };
+
+export async function getServerSideProps() {
+    const globalContent = await getGlobalContent();
+    return { props: { globalContent } };
+}
 
 export default BlogDetails;

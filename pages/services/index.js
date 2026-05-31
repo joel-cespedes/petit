@@ -1,20 +1,27 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, useRef } from 'react';
 import Navbar from '../../components/Navbar/Navbar';
 import PageTitle from '../../components/pagetitle/PageTitle'
 import ServiceSection from '../../components/ServiceSection/ServiceSection';
 import Scrollbar from '../../components/scrollbar/scrollbar'
 import Footer from '../../components/footer/Footer';
-import Logo from '/public/images/logo-2.png'
 import { useLanguage } from '../../context/LanguageContext';
+import { safeFetch, getGlobalContent, SSR_LANG } from '../../utils/serverData';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
-const ServicePage = () => {
+const ServicePage = ({ initialServices, initialPageData }) => {
     const { language } = useLanguage();
-    const [services, setServices] = useState([]);
-    const [pageData, setPageData] = useState(null);
+    const [services, setServices] = useState(initialServices || []);
+    const [pageData, setPageData] = useState(initialPageData || null);
+
+    // No re-fetchear en el primer render si el idioma coincide con el del servidor.
+    const skipNextFetch = useRef(language === SSR_LANG && initialPageData != null);
 
     useEffect(() => {
+        if (skipNextFetch.current) {
+            skipNextFetch.current = false;
+            return;
+        }
         const fetchData = async () => {
             try {
                 const [servicesRes, servicesPageRes] = await Promise.all([
@@ -37,7 +44,7 @@ const ServicePage = () => {
 
     return (
         <Fragment>
-            <Navbar hclass={'header-style-3'} Logo={Logo} />
+            <Navbar hclass={'header-style-3'} />
             <PageTitle
                 pageTitle={pageData?.page_title || ''}
                 pagesub={pageData?.page_breadcrumb || ''}
@@ -49,5 +56,22 @@ const ServicePage = () => {
         </Fragment>
     )
 };
-export default ServicePage;
 
+export async function getStaticProps() {
+    const [services, pageData, globalContent] = await Promise.all([
+        safeFetch(`/api/services?lang=${SSR_LANG}`, []),
+        safeFetch(`/api/services-page?lang=${SSR_LANG}`, null),
+        getGlobalContent(),
+    ]);
+
+    return {
+        props: {
+            initialServices: Array.isArray(services) ? services : [],
+            initialPageData: pageData,
+            globalContent,
+        },
+        revalidate: 60,
+    };
+}
+
+export default ServicePage;

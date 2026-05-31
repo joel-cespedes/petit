@@ -1,10 +1,10 @@
-import React, { Fragment, useState, useEffect, useMemo } from 'react';
+import React, { Fragment, useState, useEffect, useMemo, useRef } from 'react';
 import Navbar from '../../components/Navbar/Navbar';
 import PageTitle from '../../components/pagetitle/PageTitle';
 import Scrollbar from '../../components/scrollbar/scrollbar';
 import Footer from '../../components/footer/Footer';
-import Logo from '/public/images/logo-2.png';
 import { useLanguage } from '../../context/LanguageContext';
+import { safeFetch, getGlobalContent, SSR_LANG } from '../../utils/serverData';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -14,15 +14,17 @@ const makeCaptcha = () => ({
     b: 1 + Math.floor(Math.random() * 9),
 });
 
-const ContactPage = () => {
+const ContactPage = ({ initialData }) => {
     const { language } = useLanguage();
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [data, setData] = useState(initialData || null);
+    const [loading, setLoading] = useState(initialData == null);
 
     const [form, setForm] = useState({ name: '', email: '', message: '', captchaAnswer: '' });
     const [captcha, setCaptcha] = useState({ a: 0, b: 0 });
     const [status, setStatus] = useState(null); // null | 'sending' | 'success' | 'error'
     const [errorMsg, setErrorMsg] = useState('');
+
+    const skipNextFetch = useRef(language === SSR_LANG && initialData != null);
 
     // Inicializa el captcha solo en cliente (evita mismatch de hidratación).
     useEffect(() => {
@@ -30,6 +32,10 @@ const ContactPage = () => {
     }, []);
 
     useEffect(() => {
+        if (skipNextFetch.current) {
+            skipNextFetch.current = false;
+            return;
+        }
         const fetchData = async () => {
             try {
                 const res = await fetch(`${API_URL}/api/contact-page?lang=${language}`);
@@ -104,7 +110,7 @@ const ContactPage = () => {
 
     return (
         <Fragment>
-            <Navbar hclass={'header-style-3'} Logo={Logo} />
+            <Navbar hclass={'header-style-3'} />
             <PageTitle
                 pageTitle={data?.page_title || 'Contact Us'}
                 pagesub={data?.page_breadcrumb || 'Contact'}
@@ -276,5 +282,17 @@ const styles = {
         marginBottom: '20px',
     },
 };
+
+export async function getStaticProps() {
+    const [data, globalContent] = await Promise.all([
+        safeFetch(`/api/contact-page?lang=${SSR_LANG}`, null),
+        getGlobalContent(),
+    ]);
+
+    return {
+        props: { initialData: data, globalContent },
+        revalidate: 60,
+    };
+}
 
 export default ContactPage;

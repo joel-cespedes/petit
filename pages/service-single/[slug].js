@@ -5,8 +5,8 @@ import Navbar from '../../components/Navbar/Navbar';
 import PageTitle from '../../components/pagetitle/PageTitle';
 import Footer from '../../components/footer/Footer';
 import Scrollbar from '../../components/scrollbar/scrollbar';
-import Logo from '/public/images/logo-2.png';
 import { useLanguage } from '../../context/LanguageContext';
+import { getGlobalContent } from '../../utils/serverData';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -58,7 +58,7 @@ const ServiceSinglePage = () => {
     if (loading) {
         return (
             <Fragment>
-                <Navbar hclass={'header-style-3'} Logo={Logo} />
+                <Navbar hclass={'header-style-3'} />
                 <PageTitle pageTitle="Loading..." pagesub="Service" />
                 <section className="service-single-section section-padding">
                     <div className="container">
@@ -73,7 +73,7 @@ const ServiceSinglePage = () => {
     if (!service) {
         return (
             <Fragment>
-                <Navbar hclass={'header-style-3'} Logo={Logo} />
+                <Navbar hclass={'header-style-3'} />
                 <PageTitle pageTitle="Service Not Found" pagesub="Service" />
                 <section className="service-single-section section-padding">
                     <div className="container">
@@ -88,7 +88,7 @@ const ServiceSinglePage = () => {
 
     return (
         <Fragment>
-            <Navbar hclass={'header-style-3'} Logo={Logo} />
+            <Navbar hclass={'header-style-3'} />
             <PageTitle pageTitle={service.title} pagesub={pageData?.page_breadcrumb || 'Service'} backgroundImage={service.background_image || pageData?.background_image} />
 
             <section className="service-single-section section-padding">
@@ -174,5 +174,10 @@ const ServiceSinglePage = () => {
         </Fragment>
     );
 };
+
+export async function getServerSideProps() {
+    const globalContent = await getGlobalContent();
+    return { props: { globalContent } };
+}
 
 export default ServiceSinglePage;
