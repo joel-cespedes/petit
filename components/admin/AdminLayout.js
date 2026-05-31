@@ -49,6 +49,7 @@ export default function AdminLayout({ children, title }) {
         { title: 'Dashboard', href: '/pa-petit/dashboard', icon: '📊' },
         { title: 'Home Page', href: '/pa-petit/edit/home', icon: '🏠' },
         { title: 'About Page', href: '/pa-petit/edit/about', icon: '👤' },
+        { title: 'Contact Page', href: '/pa-petit/edit/contact', icon: '✉️' },
         { title: 'Services Page', href: '/pa-petit/edit/services-page', icon: '📋' },
         { title: 'Services (Items)', href: '/pa-petit/edit/services', icon: '⚙️' },
         { title: 'Service Detail Page', href: '/pa-petit/edit/service-single-page', icon: '📄' },

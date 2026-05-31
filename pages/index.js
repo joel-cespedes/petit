@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, useRef } from 'react';
 import Navbar from '../components/Navbar/Navbar'
 import Hero from '../components/hero/hero';
 import Features from '../components/Features/Features';
@@ -14,13 +14,25 @@ import { useLanguage } from '../context/LanguageContext';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
-const HomePage = () => {
+// Idioma con el que se pre-renderiza la página en el servidor (ISR).
+const SSR_LANG = 'en';
+
+const HomePage = ({ initialHome, initialServices, initialBlogs }) => {
     const { language } = useLanguage();
-    const [homeData, setHomeData] = useState(null);
-    const [services, setServices] = useState([]);
-    const [blogs, setBlogs] = useState([]);
+    const [homeData, setHomeData] = useState(initialHome);
+    const [services, setServices] = useState(initialServices || []);
+    const [blogs, setBlogs] = useState(initialBlogs || []);
+
+    // Evita re-fetch redundante en el primer render cuando el idioma
+    // coincide con el ya pre-renderizado en el servidor.
+    const skipNextFetch = useRef(language === SSR_LANG && initialHome != null);
 
     useEffect(() => {
+        if (skipNextFetch.current) {
+            skipNextFetch.current = false;
+            return;
+        }
+
         const fetchAllData = async () => {
             try {
                 const [homeRes, servicesRes, blogsRes] = await Promise.all([
@@ -65,4 +77,33 @@ const HomePage = () => {
         </Fragment>
     )
 };
+
+// ISR: el servidor pre-renderiza la home con el contenido ya incrustado
+// (idioma por defecto) y revalida cada 60s. Elimina el flash de texto vacío.
+export async function getStaticProps() {
+    const safeFetch = async (url, fallback) => {
+        try {
+            const res = await fetch(url);
+            return res.ok ? await res.json() : fallback;
+        } catch (err) {
+            return fallback;
+        }
+    };
+
+    const [home, services, blogsRaw] = await Promise.all([
+        safeFetch(`${API_URL}/api/home?lang=${SSR_LANG}`, null),
+        safeFetch(`${API_URL}/api/services?lang=${SSR_LANG}`, []),
+        safeFetch(`${API_URL}/api/blogs?lang=${SSR_LANG}`, { blogs: [] }),
+    ]);
+
+    return {
+        props: {
+            initialHome: home,
+            initialServices: Array.isArray(services) ? services : [],
+            initialBlogs: blogsRaw?.blogs || [],
+        },
+        revalidate: 60, // regenera la página como máximo cada 60 segundos
+    };
+}
+
 export default HomePage;
