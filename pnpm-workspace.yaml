@@ -1,0 +1,26 @@
+# ============================================================
+#  Defensa contra worms de npm (Shai-Hulud / Mini Shai-Hulud)
+# ============================================================
+
+# 1) No instalar versiones publicadas hace menos de 1 día (1440 min).
+#    Los hijacks viven 3-12 h antes del takedown; este gate los esquiva.
+minimumReleaseAge: 1440
+
+# 2) Fallar (exit != 0) si una dependencia intenta correr un script de
+#    build/instalación que NO está explícitamente permitido abajo.
+strictDepBuilds: true
+
+# 3) Allowlist explícita de paquetes que SÍ pueden ejecutar sus
+#    lifecycle scripts (preinstall/install/postinstall). El resto se ignora.
+#    pnpm 11 usa el mapa `allowBuilds` (true = permitido).
+allowBuilds:
+  sharp: true
+  core-js: true
+  core-js-pure: true
+  styled-components: true
+  swiper: true
+  '@parcel/watcher': true
+  unrs-resolver: true
+
+# No abortar `pnpm dev`/`pnpm start` con el pre-check de dependencias.
+verifyDepsBeforeRun: false

@@ -5,10 +5,30 @@ const ClickHandler = () => {
     window.scrollTo(10, 0);
 }
 
-// Strip HTML tags from text
+// Decode common HTML entities (&amp;, &nbsp;, accents, numeric codes, etc.)
+const decodeHtmlEntities = (str) => {
+    if (!str) return '';
+    if (typeof document !== 'undefined') {
+        // Browser: let the DOM decode every entity correctly
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = str;
+        return textarea.value;
+    }
+    // SSR fallback: decode the most common entities manually
+    return str
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(code));
+}
+
+// Strip HTML tags from text, then decode HTML entities
 const stripHtml = (html) => {
     if (!html) return '';
-    return html.replace(/<[^>]*>/g, '');
+    return decodeHtmlEntities(html.replace(/<[^>]*>/g, ''));
 }
 
 const ServiceSection = ({ data, services = [] }) => {
