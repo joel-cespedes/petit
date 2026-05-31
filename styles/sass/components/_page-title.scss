@@ -39,7 +39,6 @@
 		font-size: calc-rem-value(50);
 		color: $white;
 		margin: 0 0 0.30em;
-		text-transform: capitalize;
 
 		@include media-query(991px) {
 			font-size: 45px;
