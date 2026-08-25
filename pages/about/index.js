@@ -9,12 +9,31 @@ import { safeFetch, getGlobalContent, SSR_LANG } from '../../utils/serverData';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
+const SECTIONS = [
+    { titleKey: 'about_title', contentKey: 'about_content' },
+    { titleKey: 'experience_title', contentKey: 'experience_content' },
+    { titleKey: 'education_title', contentKey: 'education_content' },
+    { titleKey: 'achievements_title', contentKey: 'achievements_content' },
+];
+
+// La ficha unica de about_page se migro a la tabla team_members. Si el backend
+// aun no expone la lista, caemos al perfil antiguo para no dejar la pagina vacia.
+const getMembers = (data) => {
+    if (!data) return [];
+    if (Array.isArray(data.team_members) && data.team_members.length > 0) {
+        return data.team_members;
+    }
+    return data.name ? [data] : [];
+};
+
 const AboutPage = ({ initialData }) => {
     const { language } = useLanguage();
     const [data, setData] = useState(initialData || null);
     const [loading, setLoading] = useState(initialData == null);
 
     const skipNextFetch = useRef(language === SSR_LANG && initialData != null);
+
+    const members = getMembers(data);
 
     useEffect(() => {
         if (skipNextFetch.current) {
@@ -55,83 +74,72 @@ const AboutPage = ({ initialData }) => {
                 <div className="container">
                     <div className="row">
                         <div className="col col-lg-12 col-12">
-                            <div className="team-single-content">
-                                <div className="team">
-                                    {data?.profile_image && (
-                                        <div className="img-holder">
-                                            <img src={data.profile_image} alt={data?.name} style={{ maxWidth: '300px', borderRadius: '8px' }} />
-                                        </div>
-                                    )}
-                                    <div className="team-single-info">
-                                        <div className="info">
-                                            <h3>{data?.name}</h3>
-                                            <span>{data?.title}</span>
-                                            <ul>
-                                                {data?.phone && (
-                                                    <li><i className="ti-mobile"></i><span>Phone: </span>{data.phone}</li>
-                                                )}
-                                                {data?.email && (
-                                                    <li><i className="ti-email"></i><span>Email: </span>{data.email}</li>
-                                                )}
-                                                {data?.experience && (
-                                                    <li><i className="ti-timer"></i><span>Experience: </span>{data.experience}</li>
-                                                )}
-                                                {data?.address && (
-                                                    <li><i className="ti-location-pin"></i><span>Address: </span>{data.address}</li>
-                                                )}
-                                            </ul>
-                                        </div>
-                                        <div className="social">
-                                            <ul>
-                                                {data?.social_facebook && (
-                                                    <li><Link href={data.social_facebook} target="_blank"><i className="ti-facebook"></i></Link></li>
-                                                )}
-                                                {data?.social_twitter && (
-                                                    <li><Link href={data.social_twitter} target="_blank"><i className="ti-twitter-alt"></i></Link></li>
-                                                )}
-                                                {data?.social_linkedin && (
-                                                    <li><Link href={data.social_linkedin} target="_blank"><i className="ti-linkedin"></i></Link></li>
-                                                )}
-                                                {data?.social_pinterest && (
-                                                    <li><Link href={data.social_pinterest} target="_blank"><i className="ti-pinterest"></i></Link></li>
-                                                )}
-                                                {data?.social_instagram && (
-                                                    <li><Link href={data.social_instagram} target="_blank"><i className="ti-instagram"></i></Link></li>
-                                                )}
-                                            </ul>
+                            {members.map((member, idx) => (
+                                <div
+                                    className="team-single-content"
+                                    key={member.id ?? idx}
+                                    style={idx > 0 ? { marginTop: '80px' } : undefined}
+                                >
+                                    <div className="team">
+                                        {member.profile_image && (
+                                            <div className="img-holder">
+                                                <img src={member.profile_image} alt={member.name} style={{ maxWidth: '300px', borderRadius: '8px' }} />
+                                            </div>
+                                        )}
+                                        <div className="team-single-info">
+                                            <div className="info">
+                                                <h3>{member.name}</h3>
+                                                <span>{member.title}</span>
+                                                <ul>
+                                                    {member.phone && (
+                                                        <li><i className="ti-mobile"></i><span>Phone: </span>{member.phone}</li>
+                                                    )}
+                                                    {member.email && (
+                                                        <li><i className="ti-email"></i><span>Email: </span>{member.email}</li>
+                                                    )}
+                                                    {member.experience && (
+                                                        <li><i className="ti-timer"></i><span>Experience: </span>{member.experience}</li>
+                                                    )}
+                                                    {member.address && (
+                                                        <li><i className="ti-location-pin"></i><span>Address: </span>{member.address}</li>
+                                                    )}
+                                                </ul>
+                                            </div>
+                                            <div className="social">
+                                                <ul>
+                                                    {member.social_facebook && (
+                                                        <li><Link href={member.social_facebook} target="_blank"><i className="ti-facebook"></i></Link></li>
+                                                    )}
+                                                    {member.social_twitter && (
+                                                        <li><Link href={member.social_twitter} target="_blank"><i className="ti-twitter-alt"></i></Link></li>
+                                                    )}
+                                                    {member.social_linkedin && (
+                                                        <li><Link href={member.social_linkedin} target="_blank"><i className="ti-linkedin"></i></Link></li>
+                                                    )}
+                                                    {member.social_pinterest && (
+                                                        <li><Link href={member.social_pinterest} target="_blank"><i className="ti-pinterest"></i></Link></li>
+                                                    )}
+                                                    {member.social_instagram && (
+                                                        <li><Link href={member.social_instagram} target="_blank"><i className="ti-instagram"></i></Link></li>
+                                                    )}
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
+                                    <div className="team-details">
+                                        {SECTIONS.map(({ titleKey, contentKey }) => (
+                                            member[titleKey] ? (
+                                                <Fragment key={titleKey}>
+                                                    <h2>{member[titleKey]}</h2>
+                                                    {member[contentKey] && (
+                                                        <div dangerouslySetInnerHTML={{ __html: member[contentKey] }} />
+                                                    )}
+                                                </Fragment>
+                                            ) : null
+                                        ))}
+                                    </div>
                                 </div>
-                                <div className="team-details">
-                                    {data?.about_title && (
-                                        <>
-                                            <h2>{data.about_title}</h2>
-                                            {data.about_content && <div dangerouslySetInnerHTML={{ __html: data.about_content }} />}
-                                        </>
-                                    )}
-
-                                    {data?.experience_title && (
-                                        <>
-                                            <h2>{data.experience_title}</h2>
-                                            {data.experience_content && <div dangerouslySetInnerHTML={{ __html: data.experience_content }} />}
-                                        </>
-                                    )}
-
-                                    {data?.education_title && (
-                                        <>
-                                            <h2>{data.education_title}</h2>
-                                            {data.education_content && <div dangerouslySetInnerHTML={{ __html: data.education_content }} />}
-                                        </>
-                                    )}
-
-                                    {data?.achievements_title && (
-                                        <>
-                                            <h2>{data.achievements_title}</h2>
-                                            {data.achievements_content && <div dangerouslySetInnerHTML={{ __html: data.achievements_content }} />}
-                                        </>
-                                    )}
-                                </div>
-                            </div>
+                            ))}
                         </div>
                     </div>
                 </div>

@@ -37,6 +37,11 @@ const MobileMenu = () => {
             title: globalContent?.nav_about || 'About Us',
             link: '/about',
         },
+        {
+            id: 5,
+            title: globalContent?.nav_contact || 'Contact',
+            link: '/contact',
+        },
     ];
 
     return (

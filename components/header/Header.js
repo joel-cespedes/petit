@@ -61,6 +61,9 @@ const Header = (props) => {
                             <li >
                                 <Link onClick={ClickHandler} href="/about">{globalContent?.nav_about || 'About Us'}</Link>
                             </li>
+                            <li >
+                                <Link onClick={ClickHandler} href="/contact">{globalContent?.nav_contact || 'Contact'}</Link>
+                            </li>
                             <li className="menu-language">
                                 <select
                                     className="language-select"
