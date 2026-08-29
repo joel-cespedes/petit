@@ -31,11 +31,18 @@ const ServiceSinglePage = ({ service, allServices, pageData, locale }) => {
 
     const slugs = service?.slugs || {};
     const canonicalUrl = serviceUrl(locale, service.slug);
+    const siteName = globalContent?.site_name || 'Bucare Consulting';
+    const stripHtml = (s) => (s || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    const metaDescription = stripHtml(service.description).slice(0, 160);
+    const ogImage = service.background_image?.startsWith('http')
+        ? service.background_image
+        : `${SITE_URL}${service.background_image || '/images/logo.png'}`;
 
     return (
         <Fragment>
             <Head>
-                <title>{service.title} | {globalContent?.site_name || 'Bucare Consulting'}</title>
+                <title>{service.title} | {siteName}</title>
+                {metaDescription && <meta name="description" content={metaDescription} />}
                 <link rel="canonical" href={canonicalUrl} />
                 {LOCALES.map((lng) =>
                     slugs[lng] ? (
@@ -50,6 +57,31 @@ const ServiceSinglePage = ({ service, allServices, pageData, locale }) => {
                 {slugs.en && (
                     <link rel="alternate" hrefLang="x-default" href={serviceUrl('en', slugs.en)} />
                 )}
+
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content={canonicalUrl} />
+                <meta property="og:title" content={service.title} />
+                {metaDescription && <meta property="og:description" content={metaDescription} />}
+                <meta property="og:image" content={ogImage} />
+                <meta property="og:site_name" content={siteName} />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={service.title} />
+                {metaDescription && <meta name="twitter:description" content={metaDescription} />}
+                <meta name="twitter:image" content={ogImage} />
+
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            '@context': 'https://schema.org',
+                            '@type': 'Service',
+                            name: service.title,
+                            description: metaDescription,
+                            url: canonicalUrl,
+                            provider: { '@type': 'Organization', name: siteName, url: SITE_URL },
+                        }),
+                    }}
+                />
             </Head>
 
             <Navbar hclass={'header-style-3'} />
