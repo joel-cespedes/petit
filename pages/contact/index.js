@@ -4,6 +4,7 @@ import PageTitle from '../../components/pagetitle/PageTitle';
 import Scrollbar from '../../components/scrollbar/scrollbar';
 import Footer from '../../components/footer/Footer';
 import { useLanguage } from '../../context/LanguageContext';
+import SeoHead from '../../components/seo/SeoHead';
 import { safeFetch, getGlobalContent, SSR_LANG } from '../../utils/serverData';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
@@ -15,7 +16,7 @@ const makeCaptcha = () => ({
 });
 
 const ContactPage = ({ initialData }) => {
-    const { language } = useLanguage();
+    const { language, globalContent } = useLanguage();
     const [data, setData] = useState(initialData || null);
     const [loading, setLoading] = useState(initialData == null);
 
@@ -110,6 +111,11 @@ const ContactPage = ({ initialData }) => {
 
     return (
         <Fragment>
+            <SeoHead
+                basePath="/contact"
+                title={data?.seo_title || `${data?.page_title || 'Contact'} | ${globalContent?.site_name || 'Bucare Consulting'}`}
+                description={data?.seo_description || ''}
+            />
             <Navbar hclass={'header-style-3'} />
             <PageTitle
                 pageTitle={data?.page_title || 'Contact Us'}

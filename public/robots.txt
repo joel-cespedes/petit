@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /pa-petit
+Disallow: /api/
+
+Sitemap: https://petit-kohl.vercel.app/sitemap.xml

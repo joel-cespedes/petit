@@ -21,7 +21,7 @@ const serviceUrl = (locale, slug) => {
 };
 
 const ServiceSinglePage = ({ service, allServices, pageData, locale }) => {
-    const { setLocalizedSlugs } = useLanguage();
+    const { setLocalizedSlugs, globalContent } = useLanguage();
 
     // Expone los slugs por idioma al conmutador de idioma (para saltar al slug correcto).
     useEffect(() => {
@@ -35,7 +35,7 @@ const ServiceSinglePage = ({ service, allServices, pageData, locale }) => {
     return (
         <Fragment>
             <Head>
-                <title>{service.title}</title>
+                <title>{service.title} | {globalContent?.site_name || 'Bucare Consulting'}</title>
                 <link rel="canonical" href={canonicalUrl} />
                 {LOCALES.map((lng) =>
                     slugs[lng] ? (

@@ -17,7 +17,7 @@ const blogUrl = (locale, slug) => {
 };
 
 const BlogDetails = ({ blog, pageContent, locale }) => {
-    const { setLocalizedSlugs } = useLanguage();
+    const { setLocalizedSlugs, globalContent } = useLanguage();
 
     // Expone los slugs por idioma al conmutador de idioma.
     useEffect(() => {
@@ -34,7 +34,7 @@ const BlogDetails = ({ blog, pageContent, locale }) => {
     return (
         <Fragment>
             <Head>
-                <title>{blog?.title || 'Blog'} | Jhair</title>
+                <title>{blog?.title || 'Blog'} | {globalContent?.site_name || 'Bucare Consulting'}</title>
                 <meta name="description" content={blog?.description || ''} />
 
                 {/* Canonical + hreflang */}
@@ -54,7 +54,7 @@ const BlogDetails = ({ blog, pageContent, locale }) => {
                 <meta property="og:title" content={blog?.title || 'Blog'} />
                 <meta property="og:description" content={blog?.description || ''} />
                 <meta property="og:image" content={imageUrl} />
-                <meta property="og:site_name" content="Jhair" />
+                <meta property="og:site_name" content={globalContent?.site_name || 'Bucare Consulting'} />
                 <meta property="og:image:width" content="1200" />
                 <meta property="og:image:height" content="630" />
 
@@ -64,6 +64,27 @@ const BlogDetails = ({ blog, pageContent, locale }) => {
                 <meta name="twitter:title" content={blog?.title || 'Blog'} />
                 <meta name="twitter:description" content={blog?.description || ''} />
                 <meta name="twitter:image" content={imageUrl} />
+
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            '@context': 'https://schema.org',
+                            '@type': 'Article',
+                            headline: blog?.title || '',
+                            description: blog?.description || '',
+                            image: imageUrl,
+                            mainEntityOfPage: canonicalUrl,
+                            datePublished: blog?.published_at || undefined,
+                            author: { '@type': 'Organization', name: globalContent?.site_name || 'Bucare Consulting' },
+                            publisher: {
+                                '@type': 'Organization',
+                                name: globalContent?.site_name || 'Bucare Consulting',
+                                logo: { '@type': 'ImageObject', url: `${SITE_URL}/images/logo.png` },
+                            },
+                        }),
+                    }}
+                />
             </Head>
             <Navbar hclass={'header-style-3'}/>
             <PageTitle pageTitle={blog?.title || 'Blog'} pagesub={pageContent?.page_breadcrumb || 'Blog'} backgroundImage={blog?.background_image} />

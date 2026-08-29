@@ -59,6 +59,7 @@ export default function AdminLayout({ children, title }) {
         { title: 'Blogs (Items)', href: '/pa-petit/edit/blogs', icon: '✏️' },
         { title: 'Tags', href: '/pa-petit/edit/tags', icon: '🏷️' },
         { title: 'Global Content', href: '/pa-petit/edit/global', icon: '🌐' },
+        { title: 'SEO / Metadata', href: '/pa-petit/edit/seo', icon: '🔍' },
     ];
 
     return (

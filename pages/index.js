@@ -11,12 +11,13 @@ import BlogSection from '../components/BlogSection/BlogSection';
 import Footer from '../components/footer/Footer';
 import Scrollbar from '../components/scrollbar/scrollbar';
 import { useLanguage } from '../context/LanguageContext';
-import { safeFetch, getGlobalContent, SSR_LANG } from '../utils/serverData';
+import SeoHead from '../components/seo/SeoHead';
+import { safeFetch, getGlobalContent, SSR_LANG, SITE_URL } from '../utils/serverData';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 const HomePage = ({ initialHome, initialServices, initialBlogs }) => {
-    const { language } = useLanguage();
+    const { language, globalContent } = useLanguage();
     const [homeData, setHomeData] = useState(initialHome);
     const [services, setServices] = useState(initialServices || []);
     const [blogs, setBlogs] = useState(initialBlogs || []);
@@ -61,6 +62,26 @@ const HomePage = ({ initialHome, initialServices, initialBlogs }) => {
 
     return (
         <Fragment>
+            <SeoHead
+                basePath=""
+                title={homeData?.seo_title || `${globalContent?.site_name || 'Bucare Consulting'}${homeData?.hero_title ? ` | ${homeData.hero_title}` : ''}`}
+                description={homeData?.seo_description || homeData?.hero_subtitle || ''}
+                jsonLd={[
+                    {
+                        '@context': 'https://schema.org',
+                        '@type': 'Organization',
+                        name: globalContent?.site_name || 'Bucare Consulting',
+                        url: SITE_URL,
+                        logo: `${SITE_URL}${homeData?.logo_image || '/images/logo.png'}`,
+                    },
+                    {
+                        '@context': 'https://schema.org',
+                        '@type': 'WebSite',
+                        name: globalContent?.site_name || 'Bucare Consulting',
+                        url: SITE_URL,
+                    },
+                ]}
+            />
             <Navbar hclass={'header-style-1'} Logo={homeData?.logo_image || '/images/logo.png'} />
             <Hero data={homeData} />
             {/* <Features data={homeData} /> */}

@@ -41,7 +41,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <div>
       <Head>
-        <title>Jhair - Business Consulting Next Js Template</title>
+        <title>Bucare Consulting</title>
         <style>{`
           #nprogress .bar {
             background: #F5A623 !important;

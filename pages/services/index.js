@@ -5,12 +5,13 @@ import ServiceSection from '../../components/ServiceSection/ServiceSection';
 import Scrollbar from '../../components/scrollbar/scrollbar'
 import Footer from '../../components/footer/Footer';
 import { useLanguage } from '../../context/LanguageContext';
+import SeoHead from '../../components/seo/SeoHead';
 import { safeFetch, getGlobalContent, SSR_LANG } from '../../utils/serverData';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 const ServicePage = ({ initialServices, initialPageData }) => {
-    const { language } = useLanguage();
+    const { language, globalContent } = useLanguage();
     const [services, setServices] = useState(initialServices || []);
     const [pageData, setPageData] = useState(initialPageData || null);
 
@@ -44,6 +45,11 @@ const ServicePage = ({ initialServices, initialPageData }) => {
 
     return (
         <Fragment>
+            <SeoHead
+                basePath="/services"
+                title={pageData?.seo_title || `${pageData?.page_title || 'Services'} | ${globalContent?.site_name || 'Bucare Consulting'}`}
+                description={pageData?.seo_description || pageData?.section_description || ''}
+            />
             <Navbar hclass={'header-style-3'} />
             <PageTitle
                 pageTitle={pageData?.page_title || ''}

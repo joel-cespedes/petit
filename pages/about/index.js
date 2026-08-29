@@ -5,6 +5,7 @@ import Scrollbar from '../../components/scrollbar/scrollbar'
 import Footer from '../../components/footer/Footer';
 import Link from 'next/link';
 import { useLanguage } from '../../context/LanguageContext';
+import SeoHead from '../../components/seo/SeoHead';
 import { safeFetch, getGlobalContent, SSR_LANG } from '../../utils/serverData';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
@@ -27,7 +28,7 @@ const getMembers = (data) => {
 };
 
 const AboutPage = ({ initialData }) => {
-    const { language } = useLanguage();
+    const { language, globalContent } = useLanguage();
     const [data, setData] = useState(initialData || null);
     const [loading, setLoading] = useState(initialData == null);
 
@@ -68,6 +69,11 @@ const AboutPage = ({ initialData }) => {
 
     return (
         <Fragment>
+            <SeoHead
+                basePath="/about"
+                title={data?.seo_title || `${data?.page_title || 'About Us'} | ${globalContent?.site_name || 'Bucare Consulting'}`}
+                description={data?.seo_description || ''}
+            />
             <Navbar hclass={'header-style-3'} />
             <PageTitle pageTitle={data?.page_title || 'About Us'} pagesub={data?.page_breadcrumb || 'About'} backgroundImage={data?.background_image} />
             <section className="team-sigle-section section-padding">

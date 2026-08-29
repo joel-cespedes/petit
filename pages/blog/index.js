@@ -6,6 +6,7 @@ import Footer from '../../components/footer/Footer';
 import Scrollbar from '../../components/scrollbar/scrollbar'
 import Link from 'next/link';
 import { useLanguage } from '../../context/LanguageContext';
+import SeoHead from '../../components/seo/SeoHead';
 import { safeFetch, getGlobalContent } from '../../utils/serverData';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
@@ -17,7 +18,7 @@ const ClickHandler = () => {
 const BlogPage = ({ initialBlogs = null, initialPagination = null, initialPageData = null }) => {
     const router = useRouter();
     const { search, tag, page: pageQuery } = router.query;
-    const { language } = useLanguage();
+    const { language, globalContent } = useLanguage();
     const [blogs, setBlogs] = useState(initialBlogs || []);
     const [pagination, setPagination] = useState(initialPagination);
     const [pageData, setPageData] = useState(initialPageData);
@@ -197,6 +198,11 @@ const BlogPage = ({ initialBlogs = null, initialPagination = null, initialPageDa
 
     return (
         <Fragment>
+            <SeoHead
+                basePath="/blog"
+                title={pageData?.seo_title || `${pageData?.page_title || 'Blog'} | ${globalContent?.site_name || 'Bucare Consulting'}`}
+                description={pageData?.seo_description || ''}
+            />
             <Navbar hclass={'header-style-3'} />
             <PageTitle
                 pageTitle={getPageTitle()}
