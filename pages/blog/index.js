@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import PageTitle from '../../components/pagetitle/PageTitle'
 import Navbar from '../../components/Navbar/Navbar';
@@ -6,7 +6,7 @@ import Footer from '../../components/footer/Footer';
 import Scrollbar from '../../components/scrollbar/scrollbar'
 import Link from 'next/link';
 import { useLanguage } from '../../context/LanguageContext';
-import { getGlobalContent } from '../../utils/serverData';
+import { safeFetch, getGlobalContent } from '../../utils/serverData';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -14,19 +14,26 @@ const ClickHandler = () => {
     window.scrollTo(10, 0);
 }
 
-const BlogPage = () => {
+const BlogPage = ({ initialBlogs = null, initialPagination = null, initialPageData = null }) => {
     const router = useRouter();
     const { search, tag, page: pageQuery } = router.query;
     const { language } = useLanguage();
-    const [blogs, setBlogs] = useState([]);
-    const [pagination, setPagination] = useState(null);
-    const [pageData, setPageData] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [blogs, setBlogs] = useState(initialBlogs || []);
+    const [pagination, setPagination] = useState(initialPagination);
+    const [pageData, setPageData] = useState(initialPageData);
+    const [loading, setLoading] = useState(initialBlogs == null);
     const [currentTag, setCurrentTag] = useState(null);
 
     const currentPage = parseInt(pageQuery) || 1;
 
+    // El servidor ya pre-renderizo la 1a pagina sin filtro: evita el primer re-fetch.
+    const skipFirstFetch = useRef(initialBlogs != null && !tag && currentPage === 1);
+
     useEffect(() => {
+        if (skipFirstFetch.current) {
+            skipFirstFetch.current = false;
+            return;
+        }
         const fetchData = async () => {
             setLoading(true);
             try {
@@ -290,9 +297,18 @@ const BlogPage = () => {
 };
 
 export async function getStaticProps({ locale = 'en' }) {
-    const globalContent = await getGlobalContent(locale);
+    const [blogsData, pageData, globalContent] = await Promise.all([
+        safeFetch(`/api/blogs?lang=${locale}&page=1&per_page=6`, { blogs: [], pagination: null }),
+        safeFetch(`/api/blog-page?lang=${locale}`, null),
+        getGlobalContent(locale),
+    ]);
     return {
-        props: { globalContent },
+        props: {
+            initialBlogs: Array.isArray(blogsData?.blogs) ? blogsData.blogs : [],
+            initialPagination: blogsData?.pagination || null,
+            initialPageData: pageData,
+            globalContent,
+        },
         revalidate: 60,
     };
 }

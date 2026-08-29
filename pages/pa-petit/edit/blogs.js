@@ -66,7 +66,7 @@ export default function EditBlogs() {
 
     const handleNew = () => {
         setEditing({
-            slug: '',
+            slug_en: '', slug_es: '', slug_nl: '',
             image_url: '',
             thumbnail_url: '',
             background_image: '',
@@ -160,7 +160,7 @@ export default function EditBlogs() {
         setMessage('');
 
         // Validación
-        if (!editing.slug || !editing.slug.trim()) {
+        if (!editing.slug_en || !editing.slug_en.trim()) {
             setMessage('Error: Slug is required');
             return;
         }
@@ -306,11 +306,11 @@ export default function EditBlogs() {
                 <div style={styles.form}>
                     <div style={styles.row}>
                         <div style={styles.formGroup}>
-                            <label style={styles.label}>Slug (URL)</label>
+                            <label style={styles.label}>Slug / URL ({languageNames[activeTab]})</label>
                             <input
                                 type="text"
-                                value={editing.slug || ''}
-                                onChange={(e) => handleChange('slug', e.target.value)}
+                                value={editing[`slug_${activeTab}`] || ''}
+                                onChange={(e) => handleChange(`slug_${activeTab}`, e.target.value)}
                                 style={styles.input}
                                 placeholder="my-blog-post"
                             />
@@ -421,7 +421,7 @@ export default function EditBlogs() {
                     {blogs.map((blog) => (
                         <tr key={blog.id}>
                             <td style={styles.td}>{blog.id}</td>
-                            <td style={styles.td}>{blog.slug}</td>
+                            <td style={styles.td}>{blog.slug_en || blog.slug}</td>
                             <td style={styles.td}>{blog.title_en}</td>
                             <td style={styles.td}>
                                 <span style={{

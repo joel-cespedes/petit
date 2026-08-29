@@ -5,6 +5,12 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 const LanguageContext = createContext();
 
+// Rutas [slug] con slug localizado por idioma: pathname -> segmento base de la URL.
+const SLUG_ROUTES = {
+    '/service-single/[slug]': 'service-single',
+    '/blog-single/[slug]': 'blog-single',
+};
+
 export function LanguageProvider({ children, initialGlobalContent = null }) {
     const router = useRouter();
     // El idioma vive en la URL (routing i18n de Next): /es/..., /nl/..., raiz = en.
@@ -14,8 +20,9 @@ export function LanguageProvider({ children, initialGlobalContent = null }) {
     const [globalContent, setGlobalContent] = useState(initialGlobalContent);
     const [globalLoading, setGlobalLoading] = useState(initialGlobalContent == null);
 
-    // Slugs localizados del servicio actual, para poder cambiar de idioma en /service-single.
-    const [serviceSlugs, setServiceSlugs] = useState(null);
+    // Slugs localizados de la entidad actual (servicio o blog), para cambiar de idioma
+    // saltando al slug correcto en /service-single y /blog-single.
+    const [localizedSlugs, setLocalizedSlugs] = useState(null);
 
     // El servidor ya entrego el contenido global en el idioma de la URL: evita el primer re-fetch.
     const skipNextGlobalFetch = useRef(initialGlobalContent != null);
@@ -46,9 +53,10 @@ export function LanguageProvider({ children, initialGlobalContent = null }) {
     // Cambiar idioma = navegar al mismo contenido en otro locale (nueva URL indexable).
     const changeLanguage = (lang) => {
         if (lang === language) return;
-        // En una pagina de servicio, saltar al slug equivalente en el idioma destino.
-        if (router.pathname === '/service-single/[slug]' && serviceSlugs && serviceSlugs[lang]) {
-            router.push(`/service-single/${serviceSlugs[lang]}`, undefined, { locale: lang });
+        // En una pagina con slug localizado, saltar al slug equivalente en el idioma destino.
+        const base = SLUG_ROUTES[router.pathname];
+        if (base && localizedSlugs && localizedSlugs[lang]) {
+            router.push(`/${base}/${localizedSlugs[lang]}`, undefined, { locale: lang });
             return;
         }
         router.push({ pathname: router.pathname, query: router.query }, undefined, { locale: lang });
@@ -56,7 +64,7 @@ export function LanguageProvider({ children, initialGlobalContent = null }) {
 
     return (
         <LanguageContext.Provider
-            value={{ language, changeLanguage, globalContent, globalLoading, serviceSlugs, setServiceSlugs }}
+            value={{ language, changeLanguage, globalContent, globalLoading, localizedSlugs, setLocalizedSlugs }}
         >
             {children}
         </LanguageContext.Provider>

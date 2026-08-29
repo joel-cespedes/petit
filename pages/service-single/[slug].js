@@ -21,13 +21,13 @@ const serviceUrl = (locale, slug) => {
 };
 
 const ServiceSinglePage = ({ service, allServices, pageData, locale }) => {
-    const { setServiceSlugs } = useLanguage();
+    const { setLocalizedSlugs } = useLanguage();
 
     // Expone los slugs por idioma al conmutador de idioma (para saltar al slug correcto).
     useEffect(() => {
-        setServiceSlugs(service?.slugs || null);
-        return () => setServiceSlugs(null);
-    }, [service, setServiceSlugs]);
+        setLocalizedSlugs(service?.slugs || null);
+        return () => setLocalizedSlugs(null);
+    }, [service, setLocalizedSlugs]);
 
     const slugs = service?.slugs || {};
     const canonicalUrl = serviceUrl(locale, service.slug);
