@@ -7,6 +7,9 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 // Idioma con el que se pre-renderiza en el servidor.
 export const SSR_LANG = 'en';
 
+// URL base del sitio (para <link rel=canonical> y hreflang).
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://petit-kohl.vercel.app';
+
 // Fetch resiliente: si el backend falla, devuelve el fallback en vez de romper el build.
 export async function safeFetch(path, fallback = null) {
     try {

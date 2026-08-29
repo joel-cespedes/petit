@@ -78,12 +78,12 @@ const HomePage = ({ initialHome, initialServices, initialBlogs }) => {
 
 // ISR: el servidor pre-renderiza la home con el contenido ya incrustado
 // (idioma por defecto) y revalida cada 60s. Elimina el flash de texto vacío.
-export async function getStaticProps() {
+export async function getStaticProps({ locale = 'en' }) {
     const [home, services, blogsRaw, globalContent] = await Promise.all([
-        safeFetch(`/api/home?lang=${SSR_LANG}`, null),
-        safeFetch(`/api/services?lang=${SSR_LANG}`, []),
-        safeFetch(`/api/blogs?lang=${SSR_LANG}`, { blogs: [] }),
-        getGlobalContent(),
+        safeFetch(`/api/home?lang=${locale}`, null),
+        safeFetch(`/api/services?lang=${locale}`, []),
+        safeFetch(`/api/blogs?lang=${locale}`, { blogs: [] }),
+        getGlobalContent(locale),
     ]);
 
     return {

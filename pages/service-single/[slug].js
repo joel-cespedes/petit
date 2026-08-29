@@ -1,93 +1,57 @@
-import React, { Fragment, useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import React, { Fragment, useEffect } from 'react';
+import Head from 'next/head';
 import Link from 'next/link';
 import Navbar from '../../components/Navbar/Navbar';
 import PageTitle from '../../components/pagetitle/PageTitle';
 import Footer from '../../components/footer/Footer';
 import Scrollbar from '../../components/scrollbar/scrollbar';
 import { useLanguage } from '../../context/LanguageContext';
-import { getGlobalContent } from '../../utils/serverData';
+import { safeFetch, getGlobalContent, SITE_URL } from '../../utils/serverData';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const LOCALES = ['en', 'es', 'nl'];
 
 const ClickHandler = () => {
     window.scrollTo(10, 0);
 };
 
-const ServiceSinglePage = () => {
-    const router = useRouter();
-    const { slug } = router.query;
-    const { language, globalContent } = useLanguage();
+// Construye la URL absoluta de una pagina de servicio para un locale/slug dados.
+const serviceUrl = (locale, slug) => {
+    const prefix = locale === 'en' ? '' : `/${locale}`;
+    return `${SITE_URL}${prefix}/service-single/${slug}`;
+};
 
-    const [service, setService] = useState(null);
-    const [allServices, setAllServices] = useState([]);
-    const [pageData, setPageData] = useState(null);
-    const [loading, setLoading] = useState(true);
+const ServiceSinglePage = ({ service, allServices, pageData, locale }) => {
+    const { setServiceSlugs } = useLanguage();
 
+    // Expone los slugs por idioma al conmutador de idioma (para saltar al slug correcto).
     useEffect(() => {
-        if (!slug) return;
+        setServiceSlugs(service?.slugs || null);
+        return () => setServiceSlugs(null);
+    }, [service, setServiceSlugs]);
 
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const [serviceRes, allServicesRes, pageRes] = await Promise.all([
-                    fetch(`${API_URL}/api/services/${slug}?lang=${language}`),
-                    fetch(`${API_URL}/api/services?lang=${language}`),
-                    fetch(`${API_URL}/api/service-single-page?lang=${language}`)
-                ]);
-
-                if (serviceRes.ok) {
-                    setService(await serviceRes.json());
-                }
-                if (allServicesRes.ok) {
-                    setAllServices(await allServicesRes.json());
-                }
-                if (pageRes.ok) {
-                    setPageData(await pageRes.json());
-                }
-            } catch (err) {
-                console.error('Error fetching service:', err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, [slug, language]);
-
-    if (loading) {
-        return (
-            <Fragment>
-                <Navbar hclass={'header-style-3'} />
-                <PageTitle pageTitle="Loading..." pagesub="Service" />
-                <section className="service-single-section section-padding">
-                    <div className="container">
-                        <p>Loading...</p>
-                    </div>
-                </section>
-                <Footer />
-            </Fragment>
-        );
-    }
-
-    if (!service) {
-        return (
-            <Fragment>
-                <Navbar hclass={'header-style-3'} />
-                <PageTitle pageTitle="Service Not Found" pagesub="Service" />
-                <section className="service-single-section section-padding">
-                    <div className="container">
-                        <p>Service not found.</p>
-                        <Link href="/services">Back to Services</Link>
-                    </div>
-                </section>
-                <Footer />
-            </Fragment>
-        );
-    }
+    const slugs = service?.slugs || {};
+    const canonicalUrl = serviceUrl(locale, service.slug);
 
     return (
         <Fragment>
+            <Head>
+                <title>{service.title}</title>
+                <link rel="canonical" href={canonicalUrl} />
+                {LOCALES.map((lng) =>
+                    slugs[lng] ? (
+                        <link
+                            key={lng}
+                            rel="alternate"
+                            hrefLang={lng}
+                            href={serviceUrl(lng, slugs[lng])}
+                        />
+                    ) : null
+                )}
+                {slugs.en && (
+                    <link rel="alternate" hrefLang="x-default" href={serviceUrl('en', slugs.en)} />
+                )}
+            </Head>
+
             <Navbar hclass={'header-style-3'} />
             <PageTitle pageTitle={service.title} pagesub={pageData?.page_breadcrumb || 'Service'} backgroundImage={service.background_image || pageData?.background_image} />
 
@@ -133,7 +97,7 @@ const ServiceSinglePage = () => {
                                     <ul>
                                         <li><Link href="/services">{pageData?.sidebar_all_services || 'All Services'}</Link></li>
                                         {allServices.map((svc) => (
-                                            <li key={svc.id} className={svc.slug === slug ? 'current' : ''}>
+                                            <li key={svc.id} className={svc.slug === service.slug ? 'current' : ''}>
                                                 <Link onClick={ClickHandler} href={`/service-single/${svc.slug}`}>
                                                     {svc.title}
                                                 </Link>
@@ -175,9 +139,39 @@ const ServiceSinglePage = () => {
     );
 };
 
-export async function getServerSideProps() {
-    const globalContent = await getGlobalContent();
-    return { props: { globalContent } };
+export async function getServerSideProps({ params, locale = 'en' }) {
+    const slug = params.slug;
+    const [service, allServices, pageData, globalContent] = await Promise.all([
+        safeFetch(`/api/services/${encodeURIComponent(slug)}?lang=${locale}`, null),
+        safeFetch(`/api/services?lang=${locale}`, []),
+        safeFetch(`/api/service-single-page?lang=${locale}`, null),
+        getGlobalContent(locale),
+    ]);
+
+    if (!service) {
+        return { notFound: true };
+    }
+
+    // 301 al slug canonico del idioma si la URL trae un slug viejo o de otro idioma.
+    if (service.slug && service.slug !== slug) {
+        const prefix = locale === 'en' ? '' : `/${locale}`;
+        return {
+            redirect: {
+                destination: `${prefix}/service-single/${service.slug}`,
+                permanent: true,
+            },
+        };
+    }
+
+    return {
+        props: {
+            service,
+            allServices: Array.isArray(allServices) ? allServices : [],
+            pageData,
+            globalContent,
+            locale,
+        },
+    };
 }
 
 export default ServiceSinglePage;

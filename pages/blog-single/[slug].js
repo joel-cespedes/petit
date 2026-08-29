@@ -99,8 +99,8 @@ const BlogDetails = () => {
     )
 };
 
-export async function getServerSideProps() {
-    const globalContent = await getGlobalContent();
+export async function getServerSideProps({ locale = 'en' }) {
+    const globalContent = await getGlobalContent(locale);
     return { props: { globalContent } };
 }
 

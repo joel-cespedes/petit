@@ -289,8 +289,8 @@ const BlogPage = () => {
     )
 };
 
-export async function getStaticProps() {
-    const globalContent = await getGlobalContent();
+export async function getStaticProps({ locale = 'en' }) {
+    const globalContent = await getGlobalContent(locale);
     return {
         props: { globalContent },
         revalidate: 60,

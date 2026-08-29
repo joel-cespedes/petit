@@ -150,10 +150,10 @@ const AboutPage = ({ initialData }) => {
     );
 };
 
-export async function getStaticProps() {
+export async function getStaticProps({ locale = 'en' }) {
     const [data, globalContent] = await Promise.all([
-        safeFetch(`/api/about?lang=${SSR_LANG}`, null),
-        getGlobalContent(),
+        safeFetch(`/api/about?lang=${locale}`, null),
+        getGlobalContent(locale),
     ]);
 
     return {

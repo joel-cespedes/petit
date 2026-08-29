@@ -79,7 +79,7 @@ export default function EditServices() {
 
     const handleNew = () => {
         setEditing({
-            slug: '',
+            slug_en: '', slug_es: '', slug_nl: '',
             icon: '',
             background_image: '',
             title_en: '', title_es: '', title_nl: '',
@@ -105,8 +105,8 @@ export default function EditServices() {
         setMessage('');
 
         // Validación
-        if (!editing.slug || !editing.slug.trim()) {
-            setMessage('Error: Slug is required');
+        if (!editing.slug_en || !editing.slug_en.trim()) {
+            setMessage('Error: Slug (English) is required');
             return;
         }
         if (!editing.title_en || !editing.title_en.trim()) {
@@ -215,11 +215,11 @@ export default function EditServices() {
                 <div style={styles.form}>
                     <div style={styles.row}>
                         <div style={styles.formGroup}>
-                            <label style={styles.label}>Slug (URL)</label>
+                            <label style={styles.label}>Slug / URL ({languageNames[activeTab]})</label>
                             <input
                                 type="text"
-                                value={editing.slug || ''}
-                                onChange={(e) => handleChange('slug', e.target.value)}
+                                value={editing[`slug_${activeTab}`] || ''}
+                                onChange={(e) => handleChange(`slug_${activeTab}`, e.target.value)}
                                 style={styles.input}
                                 placeholder="my-service-name"
                             />
@@ -345,7 +345,7 @@ export default function EditServices() {
                     {services.map((service, index) => (
                         <tr key={service.id}>
                             <td style={styles.td}>{index + 1}</td>
-                            <td style={styles.td}>{service.slug}</td>
+                            <td style={styles.td}>{service.slug_en || service.slug}</td>
                             <td style={styles.td}>{service.title_en}</td>
                             <td style={styles.td}>
                                 <button onClick={() => handleEdit(service)} style={styles.editBtn}>

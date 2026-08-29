@@ -57,11 +57,11 @@ const ServicePage = ({ initialServices, initialPageData }) => {
     )
 };
 
-export async function getStaticProps() {
+export async function getStaticProps({ locale = 'en' }) {
     const [services, pageData, globalContent] = await Promise.all([
-        safeFetch(`/api/services?lang=${SSR_LANG}`, []),
-        safeFetch(`/api/services-page?lang=${SSR_LANG}`, null),
-        getGlobalContent(),
+        safeFetch(`/api/services?lang=${locale}`, []),
+        safeFetch(`/api/services-page?lang=${locale}`, null),
+        getGlobalContent(locale),
     ]);
 
     return {
