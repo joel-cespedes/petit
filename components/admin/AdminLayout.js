@@ -48,6 +48,7 @@ export default function AdminLayout({ children, title }) {
     const menuItems = [
         { title: 'Dashboard', href: '/pa-petit/dashboard', icon: '📊' },
         { title: 'Home Page', href: '/pa-petit/edit/home', icon: '🏠' },
+        { title: 'Partner Carousel', href: '/pa-petit/edit/partner-images', icon: '🖼️' },
         { title: 'About Page', href: '/pa-petit/edit/about', icon: '👤' },
         { title: 'Team Profiles', href: '/pa-petit/edit/team-members', icon: '👥' },
         { title: 'Contact Page', href: '/pa-petit/edit/contact', icon: '✉️' },

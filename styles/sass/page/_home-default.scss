@@ -827,6 +827,29 @@
 	.partner-grids img {
 		display: inline-block;
 	}
+
+	.partner-image img {
+		width: 100%;
+		height: auto;
+		border-radius: 8px;
+	}
+
+	.partner-carousel {
+		.slick-dots {
+			bottom: -35px;
+		}
+
+		.slick-dots li button:before {
+			font-size: 10px;
+			color: #c19d56;
+			opacity: 0.4;
+		}
+
+		.slick-dots li.slick-active button:before {
+			color: #c19d56;
+			opacity: 1;
+		}
+	}
 }
 
 
