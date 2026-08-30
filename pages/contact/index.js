@@ -270,6 +270,8 @@ const styles = {
         borderRadius: '4px',
         fontSize: '15px',
         boxSizing: 'border-box',
+        color: '#333',
+        backgroundColor: '#fff',
     },
     submitBtn: { border: 'none', cursor: 'pointer' },
     successBox: {
