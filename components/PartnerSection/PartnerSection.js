@@ -23,11 +23,14 @@ const PartnerSection = ({ data }) => {
     }
 
     // Carrusel desde partner_images; fallback a la imagen unica antigua (partner_image).
+    // Cada item lleva su alt_text (nombre del partner) para accesibilidad + SEO.
     const images = Array.isArray(data?.partner_images)
-        ? data.partner_images.map((it) => it?.image_url).filter(Boolean)
+        ? data.partner_images
+            .filter((it) => it?.image_url)
+            .map((it) => ({ src: it.image_url, alt: it.alt_text || 'Partner' }))
         : [];
     if (images.length === 0 && data?.partner_image) {
-        images.push(data.partner_image);
+        images.push({ src: data.partner_image, alt: 'Partner' });
     }
 
     return (
@@ -48,14 +51,14 @@ const PartnerSection = ({ data }) => {
                         <div className="partner-image">
                             {images.length > 1 ? (
                                 <Slider {...settings} className="partner-carousel">
-                                    {images.map((src, i) => (
+                                    {images.map((img, i) => (
                                         <div className="partner-slide" key={i}>
-                                            <img src={src} alt={`Partner ${i + 1}`} />
+                                            <img src={img.src} alt={img.alt} />
                                         </div>
                                     ))}
                                 </Slider>
                             ) : images.length === 1 ? (
-                                <img src={images[0]} alt="Partner" />
+                                <img src={images[0].src} alt={images[0].alt} />
                             ) : null}
                         </div>
                     </div>

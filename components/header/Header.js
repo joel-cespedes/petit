@@ -6,6 +6,20 @@ import { connect } from "react-redux";
 import { removeFromCart } from "../../store/actions/action";
 import { useLanguage } from '../../context/LanguageContext';
 
+// Estilo explicito para que el selector de idioma sea siempre legible,
+// sin depender del color heredado del header (que en header-style-3 lo dejaba
+// en blanco sobre blanco = invisible).
+const langSelectStyle = {
+    color: '#333',
+    backgroundColor: '#fff',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    padding: '5px 8px',
+    fontSize: '14px',
+    fontWeight: 500,
+    cursor: 'pointer',
+};
+
 const Header = (props) => {
     const [menuActive, setMenuState] = useState(false);
     const [cartActive, setcartState] = useState(false);
@@ -70,6 +84,7 @@ const Header = (props) => {
                                     value={language}
                                     onChange={handleLanguageChange}
                                     id="language-select"
+                                    style={langSelectStyle}
                                 >
                                     <option value="en">🇬🇧 EN</option>
                                     <option value="es">🇪🇸 ES</option>

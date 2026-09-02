@@ -5,6 +5,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 const EMPTY_IMAGE = {
     image_url: '',
+    alt_text: '',
     sort_order: 0,
 };
 
@@ -94,7 +95,10 @@ export default function EditPartnerImages() {
                 ? `${API_URL}/api/admin/partner-images`
                 : `${API_URL}/api/admin/partner-images/${editing.id}`;
 
-            const payload = { image_url: editing.image_url };
+            const payload = {
+                image_url: editing.image_url,
+                alt_text: (editing.alt_text || '').trim(),
+            };
             if (!isNew) {
                 payload.sort_order = Number(editing.sort_order) || 0;
             }
@@ -183,6 +187,21 @@ export default function EditPartnerImages() {
                             </div>
                         )}
                     </div>
+                    <div style={styles.formGroup}>
+                        <label style={styles.label}>Alt text (accessibility &amp; SEO)</label>
+                        <input
+                            type="text"
+                            value={editing.alt_text || ''}
+                            onChange={(e) => handleChange('alt_text', e.target.value)}
+                            style={styles.input}
+                            maxLength={125}
+                            placeholder="e.g. GoDutch - trusted business partner of Bucare Consultancy"
+                        />
+                        <span style={styles.hint}>
+                            Describe each logo uniquely (the partner&apos;s name). Keep it under 125
+                            characters. Leave empty only for purely decorative images.
+                        </span>
+                    </div>
                     {editing.id != null && (
                         <div style={styles.formGroup}>
                             <label style={styles.label}>Order (lower shows first)</label>
@@ -230,6 +249,7 @@ export default function EditPartnerImages() {
                     <tr>
                         <th style={styles.th}>Order</th>
                         <th style={styles.th}>Preview</th>
+                        <th style={styles.th}>Alt text</th>
                         <th style={styles.th}>Actions</th>
                     </tr>
                 </thead>
@@ -243,6 +263,11 @@ export default function EditPartnerImages() {
                                 )}
                             </td>
                             <td style={styles.td}>
+                                {img.alt_text
+                                    ? img.alt_text
+                                    : <span style={{ color: '#e67e22' }}>⚠ missing</span>}
+                            </td>
+                            <td style={styles.td}>
                                 <button onClick={() => handleEdit(img)} style={styles.editBtn}>
                                     Edit
                                 </button>
@@ -254,7 +279,7 @@ export default function EditPartnerImages() {
                     ))}
                     {images.length === 0 && (
                         <tr>
-                            <td style={styles.td} colSpan={3}>No images yet. Add one to start the carousel.</td>
+                            <td style={styles.td} colSpan={4}>No images yet. Add one to start the carousel.</td>
                         </tr>
                     )}
                 </tbody>

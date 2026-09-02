@@ -135,6 +135,23 @@ const ContactPage = ({ initialData }) => {
                         {/* Canales directos */}
                         <div className="col col-lg-5 col-12" style={{ marginBottom: '30px' }}>
                             <div className="contact-info" style={styles.infoBox}>
+                                {data?.cal_url && (
+                                    <a
+                                        href={data.cal_url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        style={styles.bookBtn}
+                                    >
+                                        <i className="ti-calendar" style={styles.bookIcon}></i>
+                                        <span>
+                                            {language === 'es'
+                                                ? 'Agenda una llamada'
+                                                : language === 'nl'
+                                                ? 'Plan een gesprek'
+                                                : 'Book a call'}
+                                        </span>
+                                    </a>
+                                )}
                                 {mailtoLink && (
                                     <a href={mailtoLink} style={styles.channel}>
                                         <i className="ti-email" style={styles.channelIcon}></i>
@@ -245,6 +262,24 @@ const styles = {
         padding: '30px',
         borderRadius: '8px',
         height: '100%',
+    },
+    bookBtn: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '10px',
+        padding: '14px 20px',
+        marginBottom: '20px',
+        backgroundColor: '#c19d56',
+        color: '#fff',
+        textDecoration: 'none',
+        borderRadius: '6px',
+        fontSize: '16px',
+        fontWeight: 600,
+    },
+    bookIcon: {
+        color: '#fff',
+        fontSize: '18px',
     },
     channel: {
         display: 'flex',

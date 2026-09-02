@@ -168,6 +168,7 @@ export default function EditContactPage() {
                         {plainField('Teléfono', 'phone', '+34 600 000 000')}
                     </div>
                     {plainField('LinkedIn URL', 'linkedin_url', 'https://www.linkedin.com/company/...')}
+                    {plainField('Cal.com / booking URL', 'cal_url', 'https://cal.com/tu-usuario/30min', 'Aparece como botón "Agenda una llamada" en la página de contacto. Vacío = oculta el botón.')}
                 </div>
 
                 {/* Page header */}
