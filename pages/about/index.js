@@ -86,10 +86,10 @@ const AboutPage = ({ initialData }) => {
                                     key={member.id ?? idx}
                                     style={idx > 0 ? { marginTop: '80px' } : undefined}
                                 >
-                                    <div className="team">
+                                    <div className="team team-profile">
                                         {member.profile_image && (
                                             <div className="img-holder">
-                                                <img src={member.profile_image} alt={member.name} style={{ maxWidth: '300px', borderRadius: '8px' }} />
+                                                <img src={member.profile_image} alt={member.name} style={{ width: '100%', borderRadius: '8px' }} />
                                             </div>
                                         )}
                                         <div className="team-single-info">
@@ -152,6 +152,35 @@ const AboutPage = ({ initialData }) => {
             </section>
             <Footer />
             <Scrollbar />
+
+            {/* Layout del perfil: imagen 25% al lado del contenido 75%; apila en móvil. */}
+            <style jsx>{`
+                .team-profile {
+                    display: flex;
+                    gap: 40px;
+                    align-items: flex-start;
+                }
+                .team-profile .img-holder {
+                    flex: 0 0 25%;
+                    max-width: 25%;
+                }
+                .team-profile .team-single-info {
+                    flex: 1 1 auto;
+                    width: 75%;
+                }
+                @media (max-width: 767px) {
+                    .team-profile {
+                        flex-direction: column;
+                        gap: 25px;
+                    }
+                    .team-profile .img-holder,
+                    .team-profile .team-single-info {
+                        flex-basis: auto;
+                        max-width: 100%;
+                        width: 100%;
+                    }
+                }
+            `}</style>
         </Fragment>
     );
 };
