@@ -26,6 +26,16 @@ const ContactPage = ({ initialData }) => {
     const [errorMsg, setErrorMsg] = useState('');
 
     const skipNextFetch = useRef(language === SSR_LANG && initialData != null);
+    const messageRef = useRef(null);
+
+    // Auto-crecimiento del área de mensaje: crece con el texto (arranca alto).
+    useEffect(() => {
+        const el = messageRef.current;
+        if (el) {
+            el.style.height = 'auto';
+            el.style.height = `${el.scrollHeight}px`;
+        }
+    }, [form.message]);
 
     // Inicializa el captcha solo en cliente (evita mismatch de hidratación).
     useEffect(() => {
@@ -219,11 +229,12 @@ const ContactPage = ({ initialData }) => {
                                     <div style={styles.formGroup}>
                                         <label style={styles.label}>{data?.form_message_label || 'Your Message'}</label>
                                         <textarea
+                                            ref={messageRef}
                                             value={form.message}
                                             onChange={(e) => handleChange('message', e.target.value)}
                                             required
                                             rows={6}
-                                            style={{ ...styles.input, resize: 'vertical' }}
+                                            style={{ ...styles.input, resize: 'none', overflow: 'hidden', minHeight: '150px' }}
                                         />
                                     </div>
                                     <div style={styles.formGroup}>
