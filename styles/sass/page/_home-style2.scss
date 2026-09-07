@@ -170,10 +170,6 @@
 		padding: 80px 0 50px;
 	}
 
-	.services-grids .grid:hover {
-		@include background-style("/images/service-bg.jpg", center 0, auto, no-repeat, local);
-	}
-
 	.services-grids {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
