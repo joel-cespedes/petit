@@ -185,10 +185,13 @@
 	}
 
 	.services-grids .grid {
+		display: block;
 		padding: 40px;
 		border: 1px solid lighten($theme-primary-color, 30%);
 		@include transition-time(0.5s);
 		position: relative;
+		text-decoration: none;
+		cursor: pointer;
 
 		@include media-query(767px) {
 			padding: 20px 25px;
@@ -237,8 +240,13 @@
 		}
 	}
 
-	.grid h3 a {
+	.grid h3 {
 		color: $heading-color;
+		@include transition-time(0.2s);
+	}
+
+	.grid p {
+		color: $text-color;
 		@include transition-time(0.2s);
 	}
 
@@ -246,7 +254,7 @@
 		color: $white;
 	}
 
-	.grid:hover h3 a,
+	.grid:hover h3,
 	.grid:hover p {
 		color: $white;
 	}

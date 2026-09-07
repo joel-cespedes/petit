@@ -53,13 +53,18 @@ const ServiceSection = ({ data, services = [] }) => {
                     <div className="col col-xs-12">
                         <div className="services-grids">
                             {services.map((service) => (
-                                <div className="grid" key={service.id}>
+                                <Link
+                                    className="grid"
+                                    key={service.id}
+                                    onClick={ClickHandler}
+                                    href={`/service-single/${service.slug}`}
+                                >
                                     <div className="icon">
                                         <i className={`fi ${service.icon || 'flaticon-sheriff'}`}></i>
                                     </div>
-                                    <h3><Link onClick={ClickHandler} href={"/service-single/[slug]"} as={`/service-single/${service.slug}`}>{service.title}</Link></h3>
+                                    <h3>{service.title}</h3>
                                     <p>{stripHtml(service.description)}</p>
-                                </div>
+                                </Link>
                             ))}
                         </div>
                     </div>
