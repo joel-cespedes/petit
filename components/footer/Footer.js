@@ -34,9 +34,11 @@ const Footer = (props) => {
                                     <h3>{globalContent?.footer_nav_title || 'Navigation'}</h3>
                                 </div>
                                 <ul>
-                                    <li><Link onClick={ClickHandler} href="/about">{globalContent?.nav_about || 'About us'}</Link></li>
+                                    <li><Link onClick={ClickHandler} href="/">{globalContent?.nav_home || 'Home'}</Link></li>
                                     <li><Link onClick={ClickHandler} href="/services">{globalContent?.nav_services || 'Services'}</Link></li>
                                     <li><Link onClick={ClickHandler} href="/blog">{globalContent?.nav_blog || 'Blog'}</Link></li>
+                                    <li><Link onClick={ClickHandler} href="/about">{globalContent?.nav_about || 'About Us'}</Link></li>
+                                    <li><Link onClick={ClickHandler} href="/contact">{globalContent?.nav_contact || 'Contact'}</Link></li>
                                 </ul>
                             </div>
                         </div>
